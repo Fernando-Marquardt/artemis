@@ -1,12 +1,10 @@
 <?php
-$db_id = mysql_connect($db_host, $db_user, $db_pass)
- or die("Could not connect to DB.");
-mysql_select_db($db_name, $db_id)
- or die("Database not found.");
+$db_id = mysqli_connect($db_host, $db_user, $db_pass, $db_name) or die("Could not connect to DB.");
  //time difference; gets for how much the mysql server time is ahead, compared to the http server time;
  $query="SELECT timediff(now(), '".date("Y-m-d H:i:s")."')";
- $result=mysql_query($query, $db_id);
- $tdif=mysql_fetch_row($result); $tdif=explode(":", $tdif[0]);
+$result = mysqli_query($db_id, $query);
+$tdif = mysqli_fetch_row($result);
+$tdif = explode(":", $tdif[0]);
  if ($tdif[0][0]=="-") {$tdif[0]=abs($tdif[0]); $tdif[3]="-";}
  else $tdif[3]="+"; $tdif=" ".$tdif[3]." interval ".$tdif[0]." hour ".$tdif[3]." interval ".$tdif[1]." minute ".$tdif[3]." interval ".$tdif[2]." second";
 
@@ -24,10 +22,12 @@ function label($msg)
  
 function clean($str)
 {
+    global $db_id;
+
  if (is_numeric($str)) $str=floor($str);
  $cleaned=strip_tags($str);
  $cleaned=htmlspecialchars($cleaned);
- $cleaned=mysql_real_escape_string($cleaned);
+ $cleaned=mysqli_real_escape_string($db_id, $cleaned);
  $to_clean=array("%20", "\"", "'", "\\", "=", ";", ":");
  $cleaned=str_replace($to_clean, "", $cleaned);
  return $cleaned;
@@ -38,11 +38,11 @@ function gen_stats($dur)
  global $db_id;
 
  $query="SELECT count(*) FROM users";
- $result=mysql_query($query, $db_id);
- $row[0]=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row[0]=mysqli_fetch_row($result);
  $query="SELECT count(*) FROM users where hour(timediff(now(), lastVisit))<".$dur;
- $result=mysql_query($query, $db_id);
- $row[1]=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row[1]=mysqli_fetch_row($result);
  
  return $row;
 }
@@ -96,9 +96,9 @@ function is_user($name, $email, $ip)
  global $db_id;
 
  $query="select count(*) from users where name='".$name."' or email='".$email."' or ip='".$ip."'";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- $row=mysql_fetch_row($result);
+ $row=mysqli_fetch_row($result);
  return $row[0];
 }
 
@@ -403,15 +403,14 @@ function faction($id)
  return $row;
 }
 
-function factions()
-{
+function factions() {
  global $db_id;
 
  $factions=array();
  $query="select * from factions";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- for ($i=0; $row=mysql_fetch_row($result); $i++) $factions[$i]=$row;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $factions[$i]=$row;
  return $factions;
 }
 
@@ -2207,7 +2206,7 @@ function install($name, $pass, $email, $faction)
  global $db_id;
 
  $query="insert into users(name, pass, email, level, joined, lastVisit, points, ip, grPath, faction) values('".$name."', '".$pass."', '".$email."', 5, now(), now(), 0, '".$_SERVER["REMOTE_ADDR"]."', 'default/', ".$faction.")";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
  $handle = fopen ("map.dat","r") or
  die("Error opening map data file."); $ok=1;
@@ -2221,7 +2220,7 @@ function install($name, $pass, $email, $faction)
 	   default: ;
    }
 		$query="insert into map(x, y, type, subtype) values (".$info[$i][0] .", ".$info[$i][1].", ".$info[$i][2].", ".$info[$i][3].")";
-		$result=mysql_query($query, $db_id);	if (!$result) $ok=0;
+		$result=mysqli_query($db_id, $query);	if (!$result) $ok=0;
  }
  fclose($handle);
  if ($ok) msg(" Succes. Map data added.");
