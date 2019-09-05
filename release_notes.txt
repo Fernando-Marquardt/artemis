@@ -1,0 +1,306 @@
+v 1.6.6
+Fixed exploit in trade.php that allowed users to gain resources. I made the sQ GET variable an absolute value of the sent data.
+Fixed bug in town_edit_.php that allowed towns to have the "" name. :P
+---
+v 1.6.5
+Fixed bug in msg_view.php that allowed players to view messages and reports that were not addressed to them.
+Fixed bug in thread_.php that didn't allow forum threads to be deleted. The $alliance variable got misspelled.
+---
+v 1.6.4
+Fixed link that incorrectly sent a user to the washop.php page when a unit finished training.
+Added an abs call to the clean function for numeric values.
+Fixed a bug in the demolish.php file that didn't update the town limits when a building got demolished.
+Updated the clean function in func.php to further prevent the game from sql injection.
+---
+v 1.6.3
+Fixed small bugs in demolish.php.
+Fixed the way the html town view is displayed in IE. Thanks to Curufea from the forum.
+Added a check_r function call to the check_a function to ensure resources are up to date in the attacked town.
+---
+v 1.6.2
+Fixed "slasher" bug in the messages & reports system. Updated clean, send_message, send_to_all, send_report functions.
+---
+v 1.6.1
+Minor bug fixes. Fixed bug that allowed the town hall to be demolished. [edited demolish.php]
+New CSS layout.
+---
+v 1.6
+- added reply button and sender nickname in the page where the messages and replies are read (msg_view.php);
+- possibility to train more units or forge more weapons at the same time (edited build.php and the build function);
+- a red number appears in front of the messages and reports buttons when a new message or report is received; the numbers decrement as you read the messages/reports (added msg_rep_alert function and edited antet.php);
+- write a message, attack, or view a profile directly from the map (edited map_lnk function and func.js);
+- players can no longer siege players with less than 3 towns (edited sendt.php);
+- damaged building, due to siege engines, now appear in reports (edited the 2 send_report function calls in check_a);
+- you can now demolish a level of a building, reducing the population of the town (added new file, demolish.php and edited hall.php);
+Special thanks to Marco for supporting this one.
+---
+v 1.5.3
+Added a new security function in func.php used to clean all GET and POST variables (edited all files which use GET and/or POST variables; lots of files... :P );
+---
+v 1.5.2
+Now 100 colonists are required to establish a new town.
+Military immunity is given now only to players who have a total population of <=120, across all their towns.
+Edited files: func.php [create function], sendt.php, create_.php.
+---
+Small fixes made in pacts_.php and stable.php.
+---
+V 1.5.1
+Fixed display bugs in town_stats.php, user_stats.php, alliance_stats.php.
+New map_.php file, made by ddayver.
+---
+v 1.5
+Fixed lots of xss vulnerabilities. All $_GET variables have been stripped of tags.
+Rewamped the reports so that they will show the combat data more intuitively.
+Edited files: func.php [the check_a function; added new functions: html_army, html_weaps, html_res].
+The message system now highlights new messages and reports with a "[new]" tag.
+Edited files: messages.php, reports.php.
+Added alliance forums.
+Edited files:
+ language/en.php [be sure to update your other translations; new words start at line 669],
+ func.php [added forum management functions; search for "forum" to find them],
+ func.js [modified the template function to display a back link to the previously loaded ajax page].
+Added files: forums.php, forums_.php, threads_.php, posts.php, posts_.php, clean_forums.php, clean_forums_.php.
+New database tables were added: forums, threads, posts. You can extract them from the included devana.sql file.
+---
+Fixed small bug in msg_view.php. Now the bottom_menu class is applied to the bottom menu, instead of the top_menu class from before.
+---
+v 1.4.3
+New map images added. Several small fixes.
+Edited files: a_edit.php, apanel.php, create.php, faq.php, func.php [function ch_capital changed], map_.php, msg.php, town_stats.php.
+---
+v 1.4.2
+Fixed map_.php so that now it shows up correctly in IE.
+Fixed typos in town.php that displayed some unwanted ";".
+Included multi-language support for unit names. Special thanks to Nenad Markovic for rewriting en.php and for adding missing cost images in some building pages.]
+[func.php has been edited: the units and weapons functions have been changed to support multilanguage names & descriptions]
+Code reindented for better reading. Also, lots of fixes done to Markovic's latest contributions regarding multi-language support. Lots of files have been edited. I lost count. :P
+---
+v 1.4.1
+Edited town.php and towns.php html code for better browser rendering.
+Added map ajax support. :D
+Edited files: map.php [now has new role], func.php [edited map_lnk function], func.js [added "template" and "map" functions];
+Added files: map_.php
+---
+Fixed exploit that allowed users to create new towns by sending false POST data to create_.php.
+---
+v 1.4
+Fixed bug that caused wrong images to be displayed for buildings in hall.php. Edited building images names. Also edited town.php to compensate for new building images names.
+Some mysql injection prevention code added.
+Special thanks to Nenad Markovic for his latest contribution:
+academy.php
+ - added realtime resources on top of a page;
+ - added images of resources in page (in upgrade part of a building and in cost of HP upgrade);
+ - user freindly HP upgrade prices;
+ - centred images and tables;
+ - fixed image and HP bug in academy.php (when HP is lvl 10, picture of a unit and HP is not displayed);
+ - changed HP value of a unit ( it was base value and now it has displayed potential value of a upgrade lvl or on lvl 10 final value);
+barracks.php
+ - added realtime resources on top of a page;
+ - added images of resources in page (in upgrade part of a building and in cost of a units);
+ - centred images and tables;
+ - displayed values of HP, ATK and DEF follows academy.php and blacksmith.php upgrade;
+blacksmith.php
+ - added realtime resources on top of a page;
+ - added images of resources in page (in upgrade part of a building and in cost of weapon and armor upgrades);
+ - user freindly weapon and armor upgrade prices;
+ - centred images and tables;
+ - divided weapon and armor parts;
+ - changed weapon and armor values of a unit ( it was base value and now it has displayed potential value of a upgrade lvl or on lvl 10 final value);
+cache.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+cathedral.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+embassy.php
+ - new look of embassy with tabs;
+ - fixed language part for members and divided into 2 tabs;
+gmill.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+granary.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+hall.php
+ - added realtime resources on top of a page;
+house.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+ - centred images and tables;
+ifoundry.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+lmill.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+marketplace.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+ - new look of marketplace with tabs;
+port.php
+ - added realtime resources on top of a page;
+ - added images of resources in page (in upgrade part of a building and in cost of a units);
+ - centred images and tables;
+ - fixed look of textbox and field button in port.php;
+ - displayed values of HP, ATK and DEF follows academy.php and blacksmith.php upgrade;
+smason.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+sshop.php
+ - added realtime resources on top of a page;
+ - added images of resources in page (in upgrade part of a building and in cost of a units);
+ - centred images and tables;
+ - displayed values of HP, ATK and DEF follows academy.php and blacksmith.php upgrade;
+stable.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+ - centred images and tables;
+tower.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+town.php
+ - javascript functions moved to func.js and compresed variables;
+wall.php
+ - added realtime resources on top of a page and description;
+ - added images of resources in page (in upgrade part of a building);
+washop.php
+ - added realtime resources on top of a page;
+ - added images of resources in page (in upgrade part of a building and in cost of a units);
+ - centred images and tables;
+wwarehouse.php
+ - added realtime resources on top of a page;
+ - added images of resources in page (in upgrade part of a building and in cost of a units);
+ - centred images and tables;
+default.css
+ - added styles for tabs;
+---
+v 1.3.3
+Added new animated flag images for the language selection buttons on the index page. index.php has been edited to comply to the new flag file names.
+The html town view has been updated thanks to Nenad Markovic/yapi [Great work!]. This is now the default town view. Edited files: town.php, towns.php.
+credits.php has been updated to show all of the contributions made by the community over time.
+The official release has split into 2 zip files. One, containing all of the files required to setup an instance of the game, and a misc.zip file that contains all old graphic files and sources that are no longer used in the game or which are not required in the installation.
+---
+v 1.3.2
+A more intuitive hall.php has been added that shows the image of the available buildings and their cost shown with images. Credits go out to yapi from the forum.
+---
+Fixed bug in statistics that made the game loop when non-digits where enterred in a number only field. Edited files: alliance_stats.php, user_stats.php, town_stats.php.
+Fixed mysql injection exploit in profile_edit.php.
+---
+Fixed bug regarding changing and purging a capital.
+Edited files: func.php, purge_.php.
+---
+I've added in-game FAQ and a guide [faq.php and guide.php] to help new players understand what they need to do.
+I've also fixed a small bug in the alliance_stats.php page.
+Other modified files are: antet.php [the upper menu display function]; about.php renamed to help.php and edited; create function in func.php edited to show a link to the game guide once a new account is created.
+---
+v 1.3.1
+Critical bug fixed that allowed a player to control another player's town.
+Most of the game files have been edited.
+You can edit them yourself by replacing any occurence of: header('Location: login.php');
+with: {header('Location: login.php'); die();}
+---
+Fixed exploit in func.php, function user.
+Edited function check_a in func.php to fix a bug that armies would vanish if target town would be purged.
+---
+Added flags in the index.php file so that users can easily change the game's language.
+Modified files: antet.php, func.php;
+Added files: ch_lang.php, languages/ro.php.
+Added color html town view link in towns.php.
+---
+Added multilingual support for building names and descriptions.
+Edited files: languages/en.php, func.php [buildings function].
+Special thanks to cenarius00 for helping.
+---
+v 1.3
+Complete multilingual suppport added as well as an Italian translation [thanks to Sbrix]. The users table has been edited by adding a new column.
+town.swf is now in the default/1/ folder. So it is now possible to make custom town.swf files for each faction in the game.
+List of edited files:
+antet.php - edited the language file inclusion line;
+func.php - edited the profile function;
+town.php - edited the src of the town.swf file;
+profile_view.php - added a new field to select the language;
+profile_edit.php - added a new parameter to the profile function;
+language/en.php - added the $lang['language'] variable;
+List of new files:
+language/it.php - Italian translation of Devana, thanks to Sbrix.
+---
+Revised the check_a function so that towns which can't support huge reinforcements due to small housing don't get them. They remain pending until the sender cancels them.
+---
+Edited line 889 in func.php to fix issue that troops would get no loot if the loot was larger than their capacity.
+---
+Modified the line: if ($data[0][1][$i]<0) $data[0][1][$i]=0; if ($data[1][1][$i]<0) $data[1][1][$i]=0;
+to:if ($data[0][1][$i]<=0) $data[0][1][$i]=0; if ($data[1][1][$i]<=0) $data[1][1][$i]=0;
+I've also edited csim.php to properly display the "simulate combat" button in the case in which the POST data is received.
+---
+Fixed bug that decreased population incorrectly after consecutive siege attacks.
+Fixed warning message that appeared when no intel was gathered by the troops.
+Fixed the "\'" issue regarding town & user names.
+Edited files: func.php.
+---
+Fixed possible security threat by adding die(); after redirect to login.php attempts.
+Fixed bug in func.php, check_a function, that allowed weapon storage stack stack overflow.
+---
+Fixed small bugs in func.php, install_.php and antet.php that shown error when attack check occured in some situations, that prevented users from installing and logging in. :D
+---
+Fixed bug in cancel_u.php that broke weapons field in towns table.
+Fixed "propose peace" label in embassy.php.
+---
+Fixed send new email feature. It will now correctly show as disabled when disabled.
+---
+Added guest account protection. [You need to create an account called 'guest'.]
+Modified msg.php so that it filters out the 'script' word.
+Modified forgot.php so that it creates a new password and sends it to you. [php mail function required]
+Added new system variable: mail_new_pass [default value 1; if set to 0, the mail new password function is disabled]
+Modified files: msg.php, pass.php, delacc.php, forgot.php, en.php.
+---
+v 1.2.3
+Added new css classes and a new css default file. Thanks go out to Putuyoga Brahmacari.
+Added a tweaked version of the db, that makes translating it more easy.
+---
+v 1.2.2
+Added chat. See devana_1.3_update_instructions.txt for update instructions.
+Modified files: antet.php, apanel.php, func.js, func.php;
+New files: chat.php, chat_.php, chat_s.php, chat_s_.php.
+---
+v 1.2.1
+Finally added multilanguage support.
+If you want to translate the project, edit language/en.php, save it as new language.php file, and edit antet.php so that it includes your new language.php file.
+Huge thanks to kasp3r for taking the time to do this. [tweaks & fixes by myself :P ]
+---
+Moved crop icon in town.swf a bit to the left because it was blocking the corn production value.
+---
+I've renamed the 2 spans that appeared in town.php so that their names won't match.
+I've also modified town.swf so that water doesn't appear in towns that don't have access to water.
+---
+v 1.2
+New town.swf [thanks to Putu Yoga], new default.css file [better looking UI].
+---
+Fixed bug in offers.php and offers_all.php that sent users to the login page when trying to view pages with index>0.
+---
+Fixed bug in pass.php that updated the password without md5 encryption.
+---
+v 1.1.1
+Added captcha to the registration page.
+Rebalanced port build/upgrade price.
+Fixed port.php to include images for the ships.
+---
+v 1.1
+Several html UI tweaks including new CSS classes.
+Files are now a bit more organised. [not by much :P ]
+New admin_panel with system variables; you can now enable/disable login, register services, as well as set if duplicate ip and/or emails are allowed.
+New user hierarchy by levels;
+5: installer/owner/"The One"/cookie lord;
+4: admin;
+3: no use at this time but added it just in case;
+2: gold user; ads are not shown;
+1: basic user.
+Added "points" field in user table structure. Lots of cool things can be done with this.
+Added md5 password encryption.
+If I forgot anything you'll probably bump into it an some point.
+Remember to read the update_instructions.txt file for update instructions. If you plan on making a fresh instance of the game you don't need to update it since it already has all the new features embedded.
+---
+Added new unit and item icons to the "negative" theme. Credits go out to axander.
+---
+Due to a lot of request on the forum, I've added an admin panel that points to all important site-management pages. [You'd think that one could have made one by themselves by now...]
+---
+Lots of bugfixes. Added function to calculate time difference between http and mysql servers.
