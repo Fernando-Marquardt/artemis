@@ -107,9 +107,9 @@ function login($name, $pass)
  global $db_id;
 
  $query="select * from users where name='".$name."' and pass='".$pass."' and level>0";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- $row=mysql_fetch_row($result);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -129,10 +129,10 @@ function user($id)
  global $db_id;
  
  $query="select * from users where id=".preg_replace("/[^0-9]/","", $id);
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result)
  {
-  $row=mysql_fetch_row($result);
+  $row=mysqli_fetch_row($result);
   $row[1]=stripslashes($row[1]); $row[9]=stripslashes($row[9]);
   return $row;
  } else return 0;
@@ -143,8 +143,8 @@ function users()
  global $db_id;
  
  $query="select * from users";
- $result=mysql_query($query, $db_id); $users=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++)
+ $result=mysqli_query($db_id, $query); $users=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++)
  {
   $users[$i]=$row;
   $users[$i][1]=stripslashes($users[$i][9]); $users[$i][9]=stripslashes($users[$i][9]);
@@ -157,11 +157,11 @@ function user_($name)
  global $db_id;
 
  $query="select * from users where name='".$name."'";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
  if ($result)
  {
-  $row=mysql_fetch_row($result);
+  $row=mysqli_fetch_row($result);
   $row[1]=stripslashes($row[1]); $row[9]=stripslashes($row[9]);
   return $row;
  } else return 0;
@@ -173,8 +173,8 @@ function config()
 
  $config=array();
  $query="select * from config order by ord asc";
- $result=mysql_query($query, $db_id);
- for ($i=0; $row=mysql_fetch_row($result); $i++) $config[$i]=$row;
+ $result=mysqli_query($db_id, $query);
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $config[$i]=$row;
  return $config;
 }
 
@@ -235,9 +235,9 @@ function alliance($id)
  global $db_id;
 
  $query="select * from alliances where id='".$id."'";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- $row=mysql_fetch_row($result);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -246,8 +246,8 @@ function forum_pruning()
  global $db_id;
 
  $query="select id from forums where parent not in (select id from forums) and parent!=0";
- $result=mysql_query($query, $db_id); $nr=0;
- for ($i=0; $row=mysql_fetch_row($result); $i++) {forum(3, $row[$i][0], 0, 0, 0, 0); $nr++;}
+ $result=mysqli_query($db_id, $query); $nr=0;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) {forum(3, $row[$i][0], 0, 0, 0, 0); $nr++;}
  return $nr;
 }
 
@@ -397,9 +397,9 @@ function faction($id)
  global $db_id;
 
  $query="select * from factions where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- $row=mysql_fetch_row($result);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -419,10 +419,10 @@ function town($id)
  global $db_id;
  
  $query="select * from towns where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result)
  {
-  $row=mysql_fetch_row($result);
+  $row=mysqli_fetch_row($result);
   $row[2]=stripslashes($row[2]); $row[14]=stripslashes($row[14]);
   return $row;
  } else return 0;
@@ -448,8 +448,8 @@ function town_xy($id)
  global $db_id;
  
  $query="select * from map where type=3 and subtype=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -458,9 +458,9 @@ function towns($id)
  global $db_id;
 
  $query="select * from towns where owner=".$id." order by isCapital desc";
- $result=mysql_query($query, $db_id); $towns=array();
+ $result=mysqli_query($db_id, $query); $towns=array();
  
- for ($i=0; $row=mysql_fetch_row($result); $i++) {$towns[$i]=$row; $towns[$i][2]=stripslashes($row[2]); $towns[$i][14]=stripslashes($row[14]);}
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) {$towns[$i]=$row; $towns[$i][2]=stripslashes($row[2]); $towns[$i][14]=stripslashes($row[14]);}
  return $towns;
 }
 
@@ -469,9 +469,9 @@ function buildings($faction)
  global $db_id, $lang;
 
  $query="select * from buildings where faction=".$faction;
- $result=mysql_query($query, $db_id); $buildings=array();
+ $result=mysqli_query($db_id, $query); $buildings=array();
  
- for ($i=0; $row=mysql_fetch_row($result); $i++)
+ for ($i=0; $row=mysqli_fetch_row($result); $i++)
  {
   $buildings[$i]=$row;
   if (isset($lang['buildings']))
@@ -526,9 +526,9 @@ function get_land()
  global $db_id;
 
  $query="select x, y from map where type=1";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- for ($i=0; $row=mysql_fetch_row($result); $i++) $land[$i]=$row;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $land[$i]=$row;
  return $land;
 }
 
@@ -537,9 +537,9 @@ function map($x, $y)
  global $db_id;
 
  $query="select * from map where (y between ".($y-3)." and ".($y+3).")  and (x between ".($x-3)." and ".($x+3).") order by y desc, x asc";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
   $data=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $data[$i]=$row;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $data[$i]=$row;
  return $data;
 }
 
@@ -548,9 +548,9 @@ function sector($x, $y)
  global $db_id;
 
  $query="select * from map where x=".$x." and y=".$y;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- $row=mysql_fetch_row($result);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -611,13 +611,13 @@ function update_lastVisit($id)
  global $db_id;
 
  $query="select count(*) from reports where recipient=".$id." and timediff((select lastVisit from users where id=".$id."), sent)<'00:00:01'";
- $result=mysql_query($query, $db_id);
- $row[0]=mysql_fetch_row($result); $row[0]=$row[0][0];
+ $result=mysqli_query($db_id, $query);
+ $row[0]=mysqli_fetch_row($result); $row[0]=$row[0][0];
  $query="select count(*) from messages where recipient=".$id." and timediff((select lastVisit from users where id=".$id."), sent)<'00:00:01'";
- $result=mysql_query($query, $db_id);
- $row[1]=mysql_fetch_row($result); $row[1]=$row[1][0];
+ $result=mysqli_query($db_id, $query);
+ $row[1]=mysqli_fetch_row($result); $row[1]=$row[1][0];
  $query="update users set lastVisit=now(), ip='".$_SERVER["REMOTE_ADDR"]."' where id=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  
  return $row;
 }
@@ -723,44 +723,44 @@ function check_d($id)
  global $db_id;
 
  $query="select timediff(dueTime, now()) from d_queue where user=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if ($row[0][0])
   if ($row[0][0]=="-")
   {
    $query="update map set type=1, subtype=6 where subtype in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="select id from alliances where founder=".$id;
-   $result=mysql_query($query, $db_id); $row=mysql_fetch_row($result);
+   $result=mysqli_query($db_id, $query); $row=mysqli_fetch_row($result);
    if ($row[0])//if the user is an alliance founder
    {
     $query="delete from alliances where id=".$row[0];
-    mysql_query($query, $db_id);
+    mysqli_query($db_id, $query);
     $query="delete from pacts where (a1=".$row[0]." or a2=".$row[0].")";
-    mysql_query($query, $db_id);
+    mysqli_query($db_id, $query);
    }
    $query="delete from a_queue where (a_queue.town in (select id from towns where owner=".$id.") or a_queue.target in (select id from towns where owner=".$id."))";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from c_queue where c_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from d_queue where user=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from t_queue where (t_queue.seller in (select id from towns where owner=".$id.") or t_queue.buyer in (select id from towns where owner=".$id."))";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from u_queue where u_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from uup_queue where uup_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from w_queue where w_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from messages where recipient=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from reports where recipient=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from towns where owner=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from users where id=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    return 0;
   }
   return 1;
@@ -810,8 +810,8 @@ function check_r($id)
  global $db_id;
 
  $query="select production, resources, limits, timediff(now(), lastCheck), morale, upkeep, population from towns where id=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  $time=explode(":", $row[3]); $time=$time[0]+$time[1]/60+$time[2]/3600;
  $res=explode("-", $row[1]); $prod=explode("-", $row[0]); $lim=explode("-", $row[2]); $m=$row[4]/100;
  if ($prod[0]-$row[5]-$row[6]<5) $prod[0]=$row[5]+$row[6]+5;//noob protection against negative crop production values
@@ -823,7 +823,7 @@ function check_r($id)
  $res=$res[0]."-".$res[1]."-".$res[2]."-".$res[3]."-".$res[4];
  
  $query="update towns set resources='".$res."', lastCheck=now() where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
 }
 
 function check_c($id, $faction)
@@ -835,8 +835,8 @@ $data=explode("-", $town[8]); $res=explode("-", $town[10]); $lim=explode("-", $t
 $land[0]=explode("-", $land[0]); $land[1]=explode("-", $land[1]); $land[2]=explode("-", $land[2]); $land[3]=explode("-", $land[3]);
 
  $query="select timediff(dueTime".$tdif.", now()), b, subB from c_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id);
- for (; $row=mysql_fetch_row($result); )
+ $result=mysqli_query($db_id, $query);
+ for (; $row=mysqli_fetch_row($result); )
  if ($row[0][0]=="-")
  {
   if ($row[2]>-1)
@@ -849,7 +849,7 @@ $land[0]=explode("-", $land[0]); $land[1]=explode("-", $land[1]); $land[2]=explo
    if ($land[$row[1]][$i]) $prod[$row[1]]+=$out[$land[$row[1]][$i]-1];
    $pdata=implode("-", $prod);
    $query="update towns set land='".$ldata."', production='".$pdata."' where id=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
   }
   else switch($row[1])
   {
@@ -857,139 +857,139 @@ $land[0]=explode("-", $land[0]); $land[1]=explode("-", $land[1]); $land[2]=explo
    {
     $data[$row[1]]=1; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 1:
    {
     $data[$row[1]]=1; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 2:
    {
     $data[$row[1]]=1; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 3:
    {
     $data[$row[1]]=1; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 4:
    {
     $data[4]++; $lim[0]=explode("-", $buildings[4][5]); $lim[0]=$lim[0][$data[4]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 5:
    {
     $data[5]++; $lim[1]=explode("-", $buildings[5][5]); $lim[1]=$lim[1][$data[5]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 6:
    {
     $data[6]++; $lim[5]=explode("-", $buildings[6][5]); $lim[5]=$lim[5][$data[6]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 7:
    {
     $data[7]++; $lim[4]=explode("-", $buildings[7][5]); $lim[4]=$lim[4][$data[7]-1]; $lim[2]+=800; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 8:
    {
     $data[8]++; $lim[3]=explode("-", $buildings[8][5]); $lim[3]=$lim[3][$data[8]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 9:
    {
     $data[9]++; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 10:
    {
     $data[10]++; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 11:
    {
     $mdata=explode("-", $buildings[11][5]);
     $data[11]++; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."', morale=".(100-$prod[4]+$mdata[$data[11]-1])." where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 12:
    {
     $data[12]++; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 13:
    {
     $data[13]++; $lim[6]=explode("-", $buildings[13][5]); $lim[6]=$lim[6][$data[13]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 14:
    {
     $data[14]++; $lim[7]=explode("-", $buildings[14][5]); $lim[7]=$lim[7][$data[14]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 15:
    {
     $data[15]++; $lim[8]=explode("-", $buildings[15][5]); $lim[8]=$lim[8][$data[15]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 16:
    {
     $data[16]=1; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 17:
    {
     $data[17]++; $bdata=implode("-", $data);
     $query="update towns set buildings='".$bdata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 18:
    {
     $data[18]++; $lim[9]=explode("-", $buildings[18][5]); $lim[9]=$lim[9][$data[18]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 19:
    {
     $data[19]++; $lim[10]=explode("-", $buildings[19][5]); $lim[10]=$lim[10][$data[19]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 20:
    {
     $data[20]++; $lim[11]=explode("-", $buildings[20][5]); $lim[11]=$lim[11][$data[20]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    case 21:
    {
     $data[21]++; $lim[12]=explode("-", $buildings[21][5]); $lim[12]=$lim[12][$data[21]-1]; $bdata=implode("-", $data); $ldata=implode("-", $lim);
     $query="update towns set buildings='".$bdata."', limits='".$ldata."' where id=".$id;
-	mysql_query($query, $db_id);
+	mysqli_query($db_id, $query);
    } break;
    default: ;
   }
   $query="delete from c_queue where c_queue.town=".$id." and c_queue.b=".$row[1]." and c_queue.subB=".$row[2];
-  mysql_query($query, $db_id);
+  mysqli_query($db_id, $query);
  }
 }
 
@@ -1000,15 +1000,15 @@ $town=town($id);
 $data=explode("-", $town[6]);
 
  $query="select timediff(dueTime".$tdif.", now()), type, quantity from w_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id);
- for (; $row=mysql_fetch_row($result); )
+ $result=mysqli_query($db_id, $query);
+ for (; $row=mysqli_fetch_row($result); )
   if ($row[0][0]=="-")
   {
    $data[$row[1]]+=$row[2]; $d=implode("-", $data);
    $query="update towns set weapons='".$d."' where id=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from w_queue where town=".$id." and type=".$row[1];
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
   }
 }
 
@@ -1054,8 +1054,8 @@ function check_a($id)
  global $db_id, $tdif;
  
  $query="select timediff(dueTime".$tdif.", now()), town, target, type, phase, army, general, uup, wup, aup, rLoot, wLoot, intel, sent, dueTime, id from a_queue where town=".$id." or target=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id);
- for (; $line=mysql_fetch_row($result); )
+ $result=mysqli_query($db_id, $query);
+ for (; $line=mysqli_fetch_row($result); )
   if ($line[0][0]=="-")
   {
    $town=town($line[1]); $lim=explode("-", $town[11]);
@@ -1157,15 +1157,15 @@ $town=town($id);
 $data=explode("-", $town[7]);
 
  $query="select timediff(dueTime".$tdif.", now()), type, quantity from u_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id);
- for (; $row=mysql_fetch_row($result); )
+ $result=mysqli_query($db_id, $query);
+ for (; $row=mysqli_fetch_row($result); )
   if ($row[0][0]=="-")
   {
    $data[$row[1]]+=$row[2]; $d=implode("-", $data);
    $query="update towns set army='".$d."' where id=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from u_queue where town=".$id." and type=".$row[1];
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
   }
 }
 
@@ -1176,16 +1176,16 @@ $town=town($id);
 $data[17]=explode("-", $town[17]); $data[18]=explode("-", $town[18]); $data[19]=explode("-", $town[19]);
 
  $query="select timediff(dueTime".$tdif.", now()), unit, tree from uup_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id);
- for (; $row=mysql_fetch_row($result); )
+ $result=mysqli_query($db_id, $query);
+ for (; $row=mysqli_fetch_row($result); )
   if ($row[0][0]=="-")
   {
    $data[$row[2]][$row[1]]++; $d=implode("-", $data[$row[2]]);
    if ($row[2]==17) $col="uUpgrades"; else if ($row[2]==18) $col="wUpgrades"; else if ($row[2]==19) $col="aUpgrades";
    $query="update towns set ".$col."='".$d."' where id=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from uup_queue where town=".$id." and unit=".$row[1]." and tree=".$row[2];
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
   }
 }
 
@@ -1194,9 +1194,9 @@ function check_t($id)
  global $db_id, $tdif;
 
  $query="select timediff(dueTime".$tdif.", now()), seller, buyer, sType, sSubType, sQ, bType, bSubType, bQ from t_queue where type=1 and (seller=".$id." or buyer=".$id.") order by dueTime asc";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- for (; $offer=mysql_fetch_row($result); )
+ for (; $offer=mysqli_fetch_row($result); )
   if ($offer[0][0]=="-")
   {
    $seller=town($offer[1]);
@@ -1206,11 +1206,11 @@ function check_t($id)
    $sdata[$offer[7]]+=$offer[8]; $bdata[$offer[4]]+=$offer[5];
    $sdata=implode("-", $sdata); $bdata=implode("-", $bdata);
   $query="update towns set ".$scol."='".$sdata."' where id=".$seller[0];
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="update towns set ".$bcol."='".$bdata."' where id=".$buyer[0];
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from t_queue where seller=".$offer[1]." and sType=".$offer[3]." and sSubType=".$offer[4]." and bType=".$offer[6]." and bSubType=".$offer[7];
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
   }
 }
 
@@ -1219,8 +1219,8 @@ function check_d_all()
  global $db_id;
 
  $query="select timediff(dueTime, now()), user from d_queue";
- $result=mysql_query($query, $db_id); $d_list=array(); $d=0;
- for ($i=0; $row=mysql_fetch_row($result); $i++)
+ $result=mysqli_query($db_id, $query); $d_list=array(); $d=0;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++)
  {
   $d_list[$i]=$row;
   if ($row[0][0]=="-") if (!check_d($row[1])) $d++;
@@ -1233,8 +1233,8 @@ function get_d($id)
  global $db_id;
 
  $query="select timediff(dueTime, now()) from d_queue where user=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  return $row[0];
 }
 
@@ -1352,8 +1352,8 @@ function get_ia($id)
  global $db_id, $tdif;
 
  $query="select timediff(dueTime".$tdif.", now()), town, target, type, phase from a_queue where (target=".$id." and phase=0) or (town=".$id." and phase=1) order by dueTime asc";
- $result=mysql_query($query, $db_id); $iaq=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $iaq[$i]=$row;
+ $result=mysqli_query($db_id, $query); $iaq=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $iaq[$i]=$row;
  return $iaq;
 }
 
@@ -1372,8 +1372,8 @@ function get_c($id)
  global $db_id, $tdif;
 
  $query="select timediff(dueTime".$tdif.", now()), b, subB from c_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id); $cq=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $cq[$i]=$row;
+ $result=mysqli_query($db_id, $query); $cq=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $cq[$i]=$row;
  return $cq;
 }
 
@@ -1498,7 +1498,7 @@ function send_to_all($subject, $contents)
  for ($i=0; $i<count($users); $i++)
  {
   $query="insert into reports(recipient, subject, contents, sent) values(".$users[$i][0].", '".$subject."', '".$contents."', now())";
-  mysql_query($query, $db_id);
+  mysqli_query($db_id, $query);
  }
 }
 
@@ -1507,7 +1507,7 @@ function send_message($from, $to, $subject, $contents)
  global $db_id;
 
  $query="insert into messages(sender, recipient, subject, contents, sent) values(".$from.", ".$to.", '".$subject."', '".$contents."', now())";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -1518,9 +1518,9 @@ function msg_rep_alert($id)
 
  $output=array();
  $query="select count(*) from reports where recipient=".$id." and timediff('".$_SESSION["user"][6]."', sent)<'00:00:00'";
- $result=mysql_query($query, $db_id); $output[0]=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query); $output[0]=mysqli_fetch_row($result);
  $query="select count(*) from messages where recipient=".$id." and timediff('".$_SESSION["user"][6]."', sent)<'00:00:00'";
- $result=mysql_query($query, $db_id); $output[1]=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query); $output[1]=mysqli_fetch_row($result);
  return $output;
 }
 
@@ -1529,8 +1529,8 @@ function messages($id)
  global $db_id;
 
  $query="select * from messages where recipient=".$id." order by sent desc";
- $result=mysql_query($query, $db_id); $reports=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++)
+ $result=mysqli_query($db_id, $query); $reports=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++)
  {
 		$reports[$i]=$row;
 		if (strtotime($row[5])>strtotime($_SESSION["user"][6])) $reports[$i][6]=1; else $reports[$i][6]=0;//if message is new
@@ -1543,8 +1543,8 @@ function reports($id)
  global $db_id;
 
  $query="select * from reports where recipient=".$id." order by sent desc";
- $result=mysql_query($query, $db_id); $reports=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++)
+ $result=mysqli_query($db_id, $query); $reports=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++)
  {
 		$reports[$i]=$row;
 		if (strtotime($row[4])<strtotime($_SESSION["user"][4])) $reports[$i][5]=1; else $reports[$i][5]=0;//if report is new
@@ -1578,8 +1578,8 @@ function report($id)
  global $db_id;
 
  $query="select * from reports where id=".$id;
- $result=mysql_query($query, $db_id); $reports=array();
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query); $reports=array();
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -1588,8 +1588,8 @@ function message($id)
  global $db_id;
 
  $query="select * from messages where id=".$id;
- $result=mysql_query($query, $db_id); $reports=array();
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query); $reports=array();
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -1613,7 +1613,7 @@ function delallrep($id)
  global $db_id;
 
  $query="delete from reports where recipient=".$id;
- $result=mysql_query($query, $db_id); $reports=array();
+ $result=mysqli_query($db_id, $query); $reports=array();
  if ($result) header('Location: reports.php?page=0');
  else msg("Failed.".mysql_error());
 }
@@ -1627,7 +1627,7 @@ $message=message($id);
  else
  {
  $query="delete from messages where id=".$id;
- $result=mysql_query($query, $db_id); $reports=array();
+ $result=mysqli_query($db_id, $query); $reports=array();
  if ($result) header('Location: messages.php?page=0');
  else msg("Failed.".mysql_error());
  }
@@ -1638,7 +1638,7 @@ function delallmsg($id)
  global $db_id;
 
  $query="delete from messages where recipient=".$id;
- $result=mysql_query($query, $db_id); $reports=array();
+ $result=mysqli_query($db_id, $query); $reports=array();
  if ($result) header('Location: messages.php?page=0');
  else msg("Failed.".mysql_error());
 }
@@ -2160,8 +2160,8 @@ function create($owner, $name, $x, $y, $is_cap)
  global $db_id;
 
  $query="select count(*) from towns where name='".$name."'";
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if ($row[0]) { msg("Name taken.");}
  else
  {
@@ -2175,26 +2175,26 @@ function create($owner, $name, $x, $y, $is_cap)
  }
 
  $query="select subtype from map where ((x=".$x." and y=".($y-1).") or (x=".($x-1)." and y=".$y.") or (x=".$x." and y=".($y+1).") or (x=".($x+1)." and y=".$y.")) and type=0";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $index=-1;
- while ($row=mysql_fetch_row($result)) if ($row[0]>-1) $index=$row[0];
+ while ($row=mysqli_fetch_row($result)) if ($row[0]>-1) $index=$row[0];
 
  $query="insert into towns(owner, name, population, isCapital, morale, weapons, army, buildings, production, resources, limits, upkeep, land, general, water, uUpgrades, wUpgrades, aUpgrades, lastCheck) values(".$owner.", '".$name."', 2, ".$is_cap.", 100, '0-0-0-0-0-0-0-0-0-0-0', '0-0-0-0-0-0-0-0-0-0-0-0-0', '0-0-0-0-0-0-0-1-0-0-0-0-0-0-0-0-0-0-0-0-0-0', '15-6-6-6-0', '500-300-300-300-150', '600-400-200-20-100-0-0-0-0-0-0-0-0', 0, '".$land."', '0-0-0-0', ".$index.", '0-0-0-0-0-0-0-0-0-0-0-0-0', '0-0-0-0-0-0-0-0-0-0-0-0-0', '0-0-0-0-0-0-0-0-0-0-0-0-0', now())";
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  
   $query="select LAST_INSERT_ID()";
-  $result=mysql_query($query, $db_id);
-  $row=mysql_fetch_row($result);
+  $result=mysqli_query($db_id, $query);
+  $row=mysqli_fetch_row($result);
  
  $query="update map set type=3, subtype=".$row[0]." where x=".$x." and y=".$y;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  
  if (!$is_cap)
  {
   $towns=towns($_SESSION["user"][0]);
   $army=explode("-", $towns[0][7]); $army[11]-=100; $army=implode("-", $army);
   $query="update towns set army='".$army."', upkeep=upkeep-100 where id=".$towns[0][0];
-  mysql_query($query, $db_id);
+  mysqli_query($db_id, $query);
  }
  if ($result) msg("Succes. You town has been created. Read the beginner's guide found in the help section.");
  else msg("Failed.".mysql_error());
@@ -2232,7 +2232,7 @@ function send_chat($se, $sid, $msg, $re)
  global $db_id;
 
  $query="insert into chat (sId, timeStamp, message, recipient, sender) values (".$sid.", now(), '".$msg."', ".$re.", ".$se.")";
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
 }
 
 function mute($id, $v)
@@ -2248,10 +2248,10 @@ function get_chat($id, $sid, $lcheck, $span)
  global $db_id, $tdif;
 
  $query="delete from chat where hour(timediff(now(), timeStamp))>".($span/60)." or minute(timediff(now(), timeStamp))>".($span%60);
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="select message from chat where (sId=".$sid." and timeStamp>'".$lcheck."'".$tdif." and ((recipient=0 or recipient=".$id.") or sender=".$id.")) or (timeStamp>'".$lcheck."'".$tdif." and recipient=".$id.")";
- $result=mysql_query($query, $db_id);
- $msgs=array(); for ($i=0; $row=mysql_fetch_row($result); $i++) $msgs[$i]=$row[0];
+ $result=mysqli_query($db_id, $query);
+ $msgs=array(); for ($i=0; $row=mysqli_fetch_row($result); $i++) $msgs[$i]=$row[0];
  return $msgs;
 }
 
@@ -2260,8 +2260,8 @@ function chat_s()
  global $db_id;
 
  $query="select * from chat_s";
- $result=mysql_query($query, $db_id);
- $chat_s=array(); for ($i=0; $row=mysql_fetch_row($result); $i++) $chat_s[$i]=$row;
+ $result=mysqli_query($db_id, $query);
+ $chat_s=array(); for ($i=0; $row=mysqli_fetch_row($result); $i++) $chat_s[$i]=$row;
  return $chat_s;
 }
 
