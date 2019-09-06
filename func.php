@@ -52,8 +52,8 @@ function clean_u($dur)
  global $db_id;
 
  $query="SELECT id FROM users where hour(timediff(now(), lastVisit))/24>".$dur;
- $result=mysql_query($query, $db_id); $nr=0;
- for (; $row=mysql_fetch_row($result); $nr++) del_u($row[0]);
+ $result=mysqli_query($db_id, $query); $nr=0;
+ for (; $row=mysqli_fetch_row($result); $nr++) del_u($row[0]);
  
  return $nr;
 }
@@ -63,8 +63,8 @@ function town_stats($col)
  global $db_id;
 
  $query="SELECT * from towns order by ".$col." desc";
- $result=mysql_query($query, $db_id); $town_stats=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $town_stats[$i]=$row;
+ $result=mysqli_query($db_id, $query); $town_stats=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $town_stats[$i]=$row;
  
  return $town_stats;
 }
@@ -74,8 +74,8 @@ function user_stats($col)
  global $db_id;
 
  $query="select id, name, (select sum(".$col.") from towns where owner=users.id) from users order by (select sum(".$col.") from towns where owner=users.id) desc";
- $result=mysql_query($query, $db_id); $user_stats=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $user_stats[$i]=$row;
+ $result=mysqli_query($db_id, $query); $user_stats=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $user_stats[$i]=$row;
  
  return $user_stats;
 }
@@ -85,8 +85,8 @@ function alliance_stats($col)
  global $db_id;
 
  $query="select id, name, (select sum(".$col.") from towns where owner in (select id from users where alliance=alliances.id)) from alliances order by (select sum(".$col.") from towns where owner in (select id from users where alliance=alliances.id)) desc";
- $result=mysql_query($query, $db_id); $alliance_stats=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $alliance_stats[$i]=$row;
+ $result=mysqli_query($db_id, $query); $alliance_stats=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $alliance_stats[$i]=$row;
  
  return $alliance_stats;
 }
@@ -118,9 +118,9 @@ function sitted($account, $sitter)
  global $db_id;
 
  $query="select * from users where name='".$account."' and sitter='".$sitter."' and level>0";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- $row=mysql_fetch_row($result);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -183,7 +183,7 @@ function config_($var, $val)
  global $db_id;
 
  $query="update config set value='".$val."' where name='".$var."'";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -193,7 +193,7 @@ function g_points($names, $q)
  global $db_id;
 
  $query="update users set points=points+".$q." where name in (".$names.")";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -203,18 +203,18 @@ function alliance_all($id)
  global $db_id;
 
  $query="select * from alliances where id=".$id;
- $result=mysql_query($query, $db_id); $alliance=array();
- $alliance[0]=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query); $alliance=array();
+ $alliance[0]=mysqli_fetch_row($result);
  if (!$alliance[0][0]) { return 0;}
  $query="select * from users where alliance=".$alliance[0][0];
- $result=mysql_query($query, $db_id);
- for ($i=0; $alliance[1][$i]=mysql_fetch_row($result); $i++) ;
+ $result=mysqli_query($db_id, $query);
+ for ($i=0; $alliance[1][$i]=mysqli_fetch_row($result); $i++) ;
  $query="select * from pacts where type=0 and (a1=".$alliance[0][0]." or a2=".$alliance[0][0].")";
- $result=mysql_query($query, $db_id);
-for ($i=0; $alliance[2][$i]=mysql_fetch_row($result); $i++) ;
+ $result=mysqli_query($db_id, $query);
+for ($i=0; $alliance[2][$i]=mysqli_fetch_row($result); $i++) ;
  $query="select * from pacts where type=1 and (a1=".$alliance[0][0]." or a2=".$alliance[0][0].")";
- $result=mysql_query($query, $db_id);
- for ($i=0; $alliance[3][$i]=mysql_fetch_row($result); $i++) ;
+ $result=mysqli_query($db_id, $query);
+ for ($i=0; $alliance[3][$i]=mysqli_fetch_row($result); $i++) ;
  
  return $alliance;
 }
@@ -224,9 +224,9 @@ function alliance_($name)
  global $db_id;
 
  $query="select * from alliances where name='".$name."'";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
- $row=mysql_fetch_row($result);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -260,16 +260,16 @@ function forum($a, $id, $alliance, $parent, $name, $desc)
   case '0'://read
    $forums=array();
    $query="select * from forums where alliance=".$alliance." and parent=".$parent." order by name";
-   $result=mysql_query($query, $db_id);
-   for ($i=0; $row=mysql_fetch_row($result); $i++)
+   $result=mysqli_query($db_id, $query);
+   for ($i=0; $row=mysqli_fetch_row($result); $i++)
    {
     $forums[0][$i]=$row;
     $query="select count(*) from threads where forum=".$forums[0][$i][0];
-    $row=mysql_fetch_row(mysql_query($query, $db_id));
+    $row=mysqli_fetch_row(mysqli_query($db_id, $query));
     $forums[0][$i][5]=$row[0];
    }
    $query="select parent from forums where id=".$parent;
-   $result=mysql_query($query, $db_id); $row=mysql_fetch_row($result);
+   $result=mysqli_query($db_id, $query); $row=mysqli_fetch_row($result);
    if ($row[0]) $forums[1]=$row[0]; else $forums[1]=0;
    return $forums;
   break;
@@ -277,22 +277,22 @@ function forum($a, $id, $alliance, $parent, $name, $desc)
   if ($name)
   {
    $query="insert into forums (alliance, parent, name, description) values (".$alliance.", ".$parent.", '".$name."', '".$desc."')";
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   } else return 0;
   break;
   case '2'://edit
    $query="update forums set parent=".$parent.", name='".$name."', description='".$desc."' where id=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   break;
   case '3'://delete
    $query="delete from posts where thread in (select id from threads where forum=".$id.")";
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    $query="delete from threads where forum=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    $query="delete from forums where id=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   break;
  }
@@ -309,12 +309,12 @@ function thread($a, $id, $forum, $author, $name, $desc, $content)
   {
    $threads=array();
    $query="select * from threads where forum=".$forum." order by date";
-   $result=mysql_query($query, $db_id);
-   for ($i=0; $row=mysql_fetch_row($result); $i++)
+   $result=mysqli_query($db_id, $query);
+   for ($i=0; $row=mysqli_fetch_row($result); $i++)
    {
     $threads[$i]=$row;
     $query="select count(*) from posts where thread=".$threads[$i][0];
-    $row=mysql_fetch_row(mysql_query($query, $db_id));
+    $row=mysqli_fetch_row(mysqli_query($db_id, $query));
     $threads[$i][7]=$row[0];
    }
    return $threads;
@@ -322,7 +322,7 @@ function thread($a, $id, $forum, $author, $name, $desc, $content)
   else
   {
    $query="select * from threads where id=".$id;
-   $thread=mysql_fetch_row(mysql_query($query, $db_id));
+   $thread=mysqli_fetch_row(mysqli_query($db_id, $query));
    return $thread;
   }
   break;
@@ -330,20 +330,20 @@ function thread($a, $id, $forum, $author, $name, $desc, $content)
   if ($name)
   {
    $query="insert into threads (forum, author, date, name, description, content) values (".$forum.", ".$author.", now(), '".$name."', '".$desc."', '".$content."')";
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   } else return 0;
   break;
   case '2'://edit
    $query="update threads set forum=".$forum.", name='".$name."', description='".$desc."', content='".$content."', date=now() where id=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   break;
   case '3'://delete
    $query="delete from posts where thread=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    $query="delete from threads where id=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   break;
  }
@@ -360,14 +360,14 @@ function post($a, $id, $thread, $author, $desc, $content)
   {
    $posts=array();
    $query="select * from posts where thread=".$thread." order by date";
-   $result=mysql_query($query, $db_id);
-   for ($i=0; $row=mysql_fetch_row($result); $i++) $posts[$i]=$row;
+   $result=mysqli_query($db_id, $query);
+   for ($i=0; $row=mysqli_fetch_row($result); $i++) $posts[$i]=$row;
    return $posts;
   }
   else
   {
    $query="select * from posts where id=".$id;
-   $post=mysql_fetch_row(mysql_query($query, $db_id));
+   $post=mysqli_fetch_row(mysqli_query($db_id, $query));
    return $post;
   }
   break;
@@ -375,18 +375,18 @@ function post($a, $id, $thread, $author, $desc, $content)
   if ($content)
   {
    $query="insert into posts (thread, author, date, description, content) values (".$thread.", ".$author.", now(), '".$desc."', '".$content."')";
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   } else return 0;
   break;
   case '2'://edit
    $query="update posts set description='".$desc."', content='".$content."', date=now() where id=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   break;
   case '3'://delete
    $query="delete from posts where id=".$id;
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) return 1; else return 0;
   break;
  }
@@ -433,11 +433,11 @@ function town_($name)
  global $db_id;
 
  $query="select * from towns where name='".$name."'";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
  if ($result)
  {
-  $row=mysql_fetch_row($result);
+  $row=mysqli_fetch_row($result);
   $row[2]=stripslashes($row[2]); $row[14]=stripslashes($row[14]);
   return $row;
  } else return 0;
@@ -488,9 +488,9 @@ function weapons($faction)
  global $db_id, $lang;
 
  $query="select * from weapons where faction=".$faction;
- $result=mysql_query($query, $db_id); $weapons=array();
+ $result=mysqli_query($db_id, $query); $weapons=array();
  
- for ($i=0; $row=mysql_fetch_row($result); $i++)
+ for ($i=0; $row=mysqli_fetch_row($result); $i++)
  {
 		$weapons[$i]=$row;
 		if (isset($lang['weapons']))
@@ -507,9 +507,9 @@ function units($faction)
  global $db_id, $lang;
 
  $query="select * from units where faction=".$faction;
- $result=mysql_query($query, $db_id); $units=array();
+ $result=mysqli_query($db_id, $query); $units=array();
  
- for ($i=0; $row=mysql_fetch_row($result); $i++)
+ for ($i=0; $row=mysqli_fetch_row($result); $i++)
  {
 		$units[$i]=$row;
 		if (isset($lang['units']))
@@ -627,7 +627,7 @@ function update_taxes($production, $morale, $id)
  global $db_id;
 
  $query="update towns set production='".$production."', morale=".$morale." where id=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
 }
 
 function update_formation($id, $gen)
@@ -636,10 +636,10 @@ function update_formation($id, $gen)
 $town=town($id);
 
  $query="update towns set general='".$gen."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  
  if ($result) header("Location: gen.php?town=".$id);
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function update_town($name, $desc, $id)
@@ -647,12 +647,12 @@ function update_town($name, $desc, $id)
  global $db_id;
 
  $query="select count(*) from towns where name='".$name."' and id!=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if (!$row[0])
  {
   $query="update towns set name='".$name."', description='".$desc."' where id=".$id;
-  mysql_query($query, $db_id);
+  mysqli_query($db_id, $query);
  } else msg("Name taken.");
 }
 
@@ -661,21 +661,21 @@ function purge($id)
  global $db_id;
 
  $query="update map set type=1, subtype=3 where type=3 and subtype=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from a_queue where a_queue.town=".$id." or a_queue.target=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from c_queue where c_queue.town=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from t_queue where t_queue.seller=".$id." or t_queue.buyer=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from u_queue where u_queue.town=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from uup_queue where uup_queue.town=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from w_queue where w_queue.town=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from towns where id=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
 }
 
 function abandon($id)
@@ -683,7 +683,7 @@ function abandon($id)
  global $db_id;
 
  $query="update towns set owner=0 where id=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
 }
 
 function aquire($id, $owner)
@@ -691,7 +691,7 @@ function aquire($id, $owner)
  global $db_id;
 
  $query="update towns set owner=".$owner." where id=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
 }
 
 function update_a($name, $desc, $id)
@@ -699,12 +699,12 @@ function update_a($name, $desc, $id)
  global $db_id;
 
  $query="select count(*) from alliances where name='".$name."' and id!=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if (!$row[0])
  {
   $query="update alliances set name='".$name."', description='".$desc."' where id=".$id;
-  mysql_query($query, $db_id);
+  mysqli_query($db_id, $query);
  } else msg("Name taken.");
 }
 
@@ -713,7 +713,7 @@ function update_rank($id, $rank)
  global $db_id;
 
  $query="update users set rank='".$rank."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -771,38 +771,38 @@ function del_u($id)
  global $db_id;
 
    $query="update map set type=1, subtype=6 where subtype in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="select id from alliances where founder=".$id;
-   $result=mysql_query($query, $db_id); $row=mysql_fetch_row($result);
+   $result=mysqli_query($db_id, $query); $row=mysqli_fetch_row($result);
    if ($row[0])//if the user is an alliance founder
    {
     $query="delete from alliances where id=".$row[0];
-    mysql_query($query, $db_id);
+    mysqli_query($db_id, $query);
     $query="delete from pacts where (a1=".$row[0]." or a2=".$row[0].")";
-    mysql_query($query, $db_id);
+    mysqli_query($db_id, $query);
    }
    $query="delete from a_queue where (a_queue.town in (select id from towns where owner=".$id.") or a_queue.target in (select id from towns where owner=".$id."))";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from c_queue where c_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from d_queue where user=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from t_queue where (t_queue.seller in (select id from towns where owner=".$id.") or t_queue.buyer in (select id from towns where owner=".$id."))";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from u_queue where u_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from uup_queue where uup_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from w_queue where w_queue.town in (select id from towns where owner=".$id.")";
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from messages where recipient=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from reports where recipient=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from towns where owner=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="delete from users where id=".$id;
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
 }
 
 function check_r($id)
@@ -1090,19 +1090,19 @@ function check_a($id)
       if ($data[1][1][11]<100)
       {
        $query="update towns set population=".$target[3].", army='".implode("-", $data[0][1])."', upkeep=".array_sum($data[0][1]).", general='".implode("-", $data[0][2])."', buildings='".implode("-", $data[0][3])."', resources='".implode("-", $data[0][5])."', weapons='".implode("-", $data[0][6])."' where id=".$target[0];
-       mysql_query($query, $db_id);
+       mysqli_query($db_id, $query);
       }
       else//if there are 100 or more colonists in attacking army
       {
 							$data[1][1][11]-=100;
 							$query="update towns set owner='".$to_owner[0]."', isCapital=0, population=".$target[3].", army='".implode("-", $data[0][1])."', upkeep=".array_sum($data[0][1]).", general='".implode("-", $data[0][2])."', buildings='".implode("-", $data[0][3])."', resources='".implode("-", $data[0][5])."', weapons='".implode("-", $data[0][6])."' where id=".$target[0];
-							mysql_query($query, $db_id);
+							mysqli_query($db_id, $query);
 							send_report($to_owner[0], "captured town", "You have captured the town of ".$target[2].".");
 							send_report($ta_owner[0], "town captured", "The town ".$target[2]." has been captured by ".$town[2].".");
       }
       if (!$data[5]) $data[5]=array("[no info]");
       $query="update a_queue set phase=1, dueTime='".$date."', army='".implode("-", $data[1][1])."', general='".implode("-", $data[1][2])."', rLoot='".implode("-", $data[3])."', wLoot='".implode("-", $data[4])."', intel='".implode("-", $data[5])."' where town=".$town[0]." and id=".$line[15];
-      mysql_query($query, $db_id);
+      mysqli_query($db_id, $query);
 						$data[0][1]=html_army($data[0][1], $ta_owner[10]); $data[1][1]=html_army($data[1][1], $to_owner[10]); $data[0][10]=html_army($data[0][10], $ta_owner[10]); $data[1][10]=html_army($data[1][10], $to_owner[10]); $data[3]=html_res($data[3]); $data[4]=html_weaps($data[4]);
 						if ($siege_target>-1) $siege_target="</br>Demolished building: ".$buildings[$siege_target][2]; else $siege_target="";
       send_report($ta_owner[0], "battle report, attacked", "attacked by <a class='q_link' href='profile_view.php?id=".$town[1]."'>".$town[2]."</a></br>enemy troops before battle:</br>".$data[1][10]."</br>and after:</br>".$data[1][1]."</br>your troops before battle:</br>".$data[0][10]."</br>and after:</br>".$data[0][1].$siege_target);
@@ -1115,18 +1115,18 @@ function check_a($id)
       $res=explode("-", $town[10]); for ($i=0; $i<5; $i++) $res[$i]+=$data[3][$i]; $res=implode("-", $res);
       $weaps=explode("-", $town[6]); for ($i=0; $i<11; $i++) if ($weaps[$i]+$data[4][$i]<=$lim[12]) $weaps[$i]+=$data[4][$i]; else $weaps[$i]=$lim[12]; $weaps=implode("-", $weaps);
       $query="update towns set army='".implode("-", $army)."', upkeep=".array_sum($army).", general='".$ogen."', resources='".$res."', weapons='".$weaps."' where id=".$town[0];
-      mysql_query($query, $db_id);
+      mysqli_query($db_id, $query);
       $query="delete from a_queue where town=".$town[0]." and id=".$line[15];
-      mysql_query($query, $db_id);
+      mysqli_query($db_id, $query);
      }
     }
     else//reinforce target
     {
      $army=explode("-", $target[7]); $qarmy=explode("-", $line[5]); for ($i=0; $i<count($army); $i++) $army[$i]+=$qarmy[$i];
      $query="update towns set army='".implode("-", $army)."', upkeep=".array_sum($army)." where id=".$target[0];
-     mysql_query($query, $db_id);
+     mysqli_query($db_id, $query);
      $query="delete from a_queue where town=".$town[0]." and id=".$line[15];
-     mysql_query($query, $db_id);
+     mysqli_query($db_id, $query);
 					$line[5]=html_army($qarmy, $to_owner[10]);
      send_report($to_owner[0], "reinforcements sent", "</br>".$line[5]."</br>to <a class='q_link' href='profile_view.php?id=".$target[1]."'>".$target[2]."</a>");
      send_report($ta_owner[0], "reinforcements received", "</br>".$line[5]."</br>troops arrived from <a class='q_link' href='profile_view.php?id=".$town[1]."'>".$town[2]."</a>");
@@ -1138,14 +1138,14 @@ function check_a($id)
     $res=explode("-", $town[10]); for ($i=0; $i<5; $i++) $res[$i]+=$data[3][$i]; $res=implode("-", $res);
     $weaps=explode("-", $town[6]); for ($i=0; $i<11; $i++) if ($weaps[$i]+$data[4][$i]<=$lim[12]) $weaps[$i]+=$data[4][$i]; else $weaps[$i]=$lim[12]; $weaps=implode("-", $weaps);
     $query="update towns set army='".implode("-", $army)."', upkeep=".array_sum($army).", general='".$ogen."', resources='".$res."', weapons='".$weaps."' where id=".$town[0];
-    mysql_query($query, $db_id);
+    mysqli_query($db_id, $query);
     $query="delete from a_queue where town=".$town[0]." and id=".$line[15];
-    mysql_query($query, $db_id);
+    mysqli_query($db_id, $query);
    }
    else//if there is no target town and no source town
    {
     $query="delete from a_queue where town=".$town[0]." and id=".$line[15];
-    mysql_query($query, $db_id);
+    mysqli_query($db_id, $query);
    }
   }
 }
@@ -1243,9 +1243,9 @@ function get_con($id)
  global $db_id;
 
  $query="select b from c_queue where town=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $b=array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
- for ($i=0; $row=mysql_fetch_row($result); $i++) $b[$row[0]]=1;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $b[$row[0]]=1;
  return $b;
 }
 
@@ -1254,9 +1254,9 @@ function get_wea($id)
  global $db_id;
 
  $query="select type from w_queue where town=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $w=array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
- for ($i=0; $row=mysql_fetch_row($result); $i++) $w[$row[0]]=1;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $w[$row[0]]=1;
  return $w;
 }
 
@@ -1265,9 +1265,9 @@ function get_uup($id)
  global $db_id;
 
  $query="select unit from uup_queue where town=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $u=array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
- for ($i=0; $row=mysql_fetch_row($result); $i++) $u[$row[0]]=1;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $u[$row[0]]=1;
  return $u;
 }
 
@@ -1276,9 +1276,9 @@ function get_uns($id)
  global $db_id;
 
  $query="select type from u_queue where town=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $u=array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
- for ($i=0; $row=mysql_fetch_row($result); $i++) $u[$row[0]]=1;
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $u[$row[0]]=1;
  return $u;
 }
 
@@ -1288,12 +1288,12 @@ function get_tr($id)
 
  $merchants=0;
  $query="select sType, sQ from t_queue where seller=".$id;
- $result=mysql_query($query, $db_id);
- for (; $row=mysql_fetch_row($result); )
+ $result=mysqli_query($db_id, $query);
+ for (; $row=mysqli_fetch_row($result); )
   if ($row[0]) $merchants+=ceil($row[1]/50); else $merchants+=ceil($row[1]/500);
  $query="select bType, bQ from t_queue where buyer=".$id;
- $result=mysql_query($query, $db_id);
- for (; $row=mysql_fetch_row($result); )
+ $result=mysqli_query($db_id, $query);
+ for (; $row=mysqli_fetch_row($result); )
   if ($row[0]) $merchants+=ceil($row[1]/50); else $merchants+=ceil($row[1]/500);
  
  return $merchants;
@@ -1305,14 +1305,14 @@ function get_t($id)
 
  $tq=array();
  $query="select sType, sSubType, sQ, bType, bSubType, bQ from t_queue where seller=".$id." and type=0";
- $result=mysql_query($query, $db_id);
- for ($i=0; $tq[0][$i]=mysql_fetch_row($result); $i++) ;
+ $result=mysqli_query($db_id, $query);
+ for ($i=0; $tq[0][$i]=mysqli_fetch_row($result); $i++) ;
  $query="select bType, bSubType, bQ, buyer, timediff(dueTime".$tdif.", now()), sType, sSubType, sQ from t_queue where seller=".$id." and type=1";
- $result=mysql_query($query, $db_id);
- for ($i=0; $tq[1][$i]=mysql_fetch_row($result); $i++) ;
+ $result=mysqli_query($db_id, $query);
+ for ($i=0; $tq[1][$i]=mysqli_fetch_row($result); $i++) ;
  $query="select sType, sSubType, sQ, seller, timediff(dueTime".$tdif.", now()), bType, bSubType, bQ from t_queue where buyer=".$id." and type=1";
- $result=mysql_query($query, $db_id);
- for ($i=0; $tq[2][$i]=mysql_fetch_row($result); $i++) ;
+ $result=mysqli_query($db_id, $query);
+ for ($i=0; $tq[2][$i]=mysqli_fetch_row($result); $i++) ;
  
  return $tq;
 }
@@ -1322,8 +1322,8 @@ function get_w($id)
  global $db_id, $tdif;
 
  $query="select timediff(dueTime".$tdif.", now()), type, quantity from w_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id); $wq=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $wq[$i]=$row;
+ $result=mysqli_query($db_id, $query); $wq=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $wq[$i]=$row;
  return $wq;
 }
 
@@ -1332,8 +1332,8 @@ function get_u($id)
  global $db_id, $tdif;
 
  $query="select timediff(dueTime".$tdif.", now()), type, quantity from u_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id); $uq=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $uq[$i]=$row;
+ $result=mysqli_query($db_id, $query); $uq=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $uq[$i]=$row;
  return $uq;
 }
 
@@ -1342,8 +1342,8 @@ function get_a($id)
  global $db_id, $tdif;
 
  $query="select timediff(dueTime".$tdif.", now()), target, type, army, general, id from a_queue where town=".$id." and phase=0 order by dueTime asc";
- $result=mysql_query($query, $db_id); $aq=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $aq[$i]=$row;
+ $result=mysqli_query($db_id, $query); $aq=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $aq[$i]=$row;
  return $aq;
 }
 
@@ -1362,8 +1362,8 @@ function get_up($id)
  global $db_id, $tdif;
 
  $query="select timediff(dueTime".$tdif.", now()), unit, tree from uup_queue where town=".$id." order by dueTime asc";
- $result=mysql_query($query, $db_id); $upq=array();
- for ($i=0; $row=mysql_fetch_row($result); $i++) $upq[$i]=$row;
+ $result=mysqli_query($db_id, $query); $upq=array();
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $upq[$i]=$row;
  return $upq;
 }
 
@@ -1382,8 +1382,8 @@ function get_pact($a1, $a2)
  global $db_id;
 
  $query="select type from pacts where (a1=".$a1." and a2=".$a2.") or (a1=".$a2." and a2=".$a1.")";
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  return $row[0];
 }
 
@@ -1392,9 +1392,9 @@ function cancel_d($id)
  global $db_id;
 
  $query="delete from d_queue where user=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) msg("Delete request withdrawn.");
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function cancel_c($id, $b, $subB, $res, $faction)
@@ -1408,11 +1408,11 @@ $land[0]=explode("-", $land[0]); $land[1]=explode("-", $land[1]); $land[2]=explo
   if ($subB==-1) $pop=$town[3]-$upk[$data[$b]];
   else $pop=$town[3]-$upk[$land[$b][$subB]];
  $query="update towns set resources='".$res."', population=".$pop." where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="delete from c_queue where town=".$id." and b=".$b;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function cancel_a($id, $tid, $army, $gen)
@@ -1421,11 +1421,11 @@ function cancel_a($id, $tid, $army, $gen)
 
  $army=explode("-", $army);
  $query="update towns set army='".implode("-", $army)."', upkeep=".array_sum($army).", general='".$gen."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="delete from a_queue where town=".$id." and id=".$tid;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) header("Location: dispatch.php?town=".$id);
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function cancel_w($id, $type, $res)
@@ -1433,11 +1433,11 @@ function cancel_w($id, $type, $res)
  global $db_id;
 
  $query="update towns set resources='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="delete from w_queue where town=".$id." and type=".$type;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function cancel_u($id, $type, $res, $weaps, $q)
@@ -1446,11 +1446,11 @@ function cancel_u($id, $type, $res, $weaps, $q)
 $town=town($id); $town[7]=explode("-", $town[7]);
 
  $query="update towns set resources='".$res."', weapons='".$weaps."', upkeep=".array_sum($town[7])." where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="delete from u_queue where town=".$id." and type=".$type;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function cancel_uup($id, $unit, $tree, $res)
@@ -1458,11 +1458,11 @@ function cancel_uup($id, $unit, $tree, $res)
  global $db_id;
 
  $query="update towns set resources='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="delete from uup_queue where town=".$id." and unit=".$unit." and tree=".$tree;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function cancel_t($id, $sType, $sSubType, $bType, $bSubType, $res)
@@ -1473,19 +1473,19 @@ $data=explode("-", $town[6]);
 
  if ($sType) $scol="weapons"; else $scol="resources";
  $query="update towns set ".$scol."='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="delete from t_queue where seller=".$id." and sType=".$sType." and sSubType=".$sSubType." and bType=".$bType." and bSubType=".$bSubType;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) header("Location: marketplace.php?town=".$id);
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function send_report($to, $subject, $contents)
 {
  global $db_id;
  
- $query="insert into reports(recipient, subject, contents, sent) values(".$to.", '".mysql_real_escape_string($subject)."', '".mysql_real_escape_string($contents)."', now())";
- $result=mysql_query($query, $db_id);
+ $query="insert into reports(recipient, subject, contents, sent) values(".$to.", '".mysqli_real_escape_string($db_id, $subject)."', '".mysqli_real_escape_string($db_id, $contents)."', now())";
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -1558,8 +1558,8 @@ function offers($sType, $sSubType, $bType, $bSubType)
 
  $offers=array();
  $query="select * from t_queue where type=0 and sType=".$sType." and sSubType=".$sSubType." and bType=".$bType." and bSubType=".$bSubType;
- $result=mysql_query($query, $db_id);
- for ($i=0; $row=mysql_fetch_row($result); $i++) $offers[$i]=$row;
+ $result=mysqli_query($db_id, $query);
+ for ($i=0; $row=mysqli_fetch_row($result); $i++) $offers[$i]=$row;
  return $offers;
 }
 
@@ -1568,8 +1568,8 @@ function offer($seller, $sType, $sSubType, $bType, $bSubType)
  global $db_id;
 
  $query="select * from t_queue where seller=".$seller." and sType=".$sType." and sSubType=".$sSubType." and bType=".$bType." and bSubType=".$bSubType;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  return $row;
 }
 
@@ -1602,9 +1602,9 @@ $report=report($id);
  else
  {
  $query="delete from reports where id=".$id;
- $result=mysql_query($query, $db_id); $reports=array();
+ $result=mysqli_query($db_id, $query); $reports=array();
  if ($result) header('Location: reports.php?page=0');
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
  }
 }
 
@@ -1615,7 +1615,7 @@ function delallrep($id)
  $query="delete from reports where recipient=".$id;
  $result=mysqli_query($db_id, $query); $reports=array();
  if ($result) header('Location: reports.php?page=0');
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function delmsg($id, $owner)
@@ -1629,7 +1629,7 @@ $message=message($id);
  $query="delete from messages where id=".$id;
  $result=mysqli_query($db_id, $query); $reports=array();
  if ($result) header('Location: messages.php?page=0');
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
  }
 }
 
@@ -1640,7 +1640,7 @@ function delallmsg($id)
  $query="delete from messages where recipient=".$id;
  $result=mysqli_query($db_id, $query); $reports=array();
  if ($result) header('Location: messages.php?page=0');
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function delacc($id)
@@ -1648,15 +1648,15 @@ function delacc($id)
  global $db_id;
 
  $query="select count(*) from d_queue where user=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if (!$row[0])
  {
   $date=strtotime("+1 day"); $date=strftime("%Y-%m-%d %H:%M:%S", $date);
   $query="insert into d_queue(user, dueTime) values('".$id."', '".$date."')";
-  $result=mysql_query($query, $db_id);
+  $result=mysqli_query($db_id, $query);
   if ($result) msg("Account will be deleted in 24 hours.");
-  else msg("Failed.".mysql_error());
+  else msg("Failed.".mysqli_error($db_id));
  } else msg("Account is already scheduled for deletion.");
 }
 
@@ -1669,21 +1669,21 @@ function build($id, $b, $subB, $time, $res, $faction)
  $time=explode(":", $time);
  
  $query="select max(dueTime) from c_queue where town=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if ($row[0]!="") $date=strtotime("+".$time[0]." hours ".$time[1]." minutes ".($time[2]+rand(0, 9))." seconds", strtotime($row[0])); else $date=strtotime("+".$time[0]." hours ".$time[1]." minutes ".($time[2]+rand(0, 9))." seconds");
  $date=strftime("%Y-%m-%d %H:%M:%S", $date);
  $query="insert into c_queue(town, dueTime, b, subB) values('".$id."', '".$date."', '".$b."', '".$subB."')";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="update towns set resources='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($subB==-1) $pop=$town[3]+$upk[$data[$b]];
  else $pop=$town[3]+$upk[$land[$b][$subB]];
  $query="update towns set population=".$pop." where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
   
  if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function forge($a, $id, $type, $q, $time, $res)
@@ -1695,16 +1695,16 @@ function forge($a, $id, $type, $q, $time, $res)
  
  if (!$a) $query="select max(dueTime) from w_queue where town=".$id;
  else $query="select dueTime from w_queue where town=".$id." and type=".$type;
- $result=mysql_query($query, $db_id); $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query); $row=mysqli_fetch_row($result);
  if ($row[0]!="") $date=strtotime("+".$time[0]." hours ".$time[1]." minutes ".$time[2]." seconds", strtotime($row[0])); else $date=strtotime("+".$time[0]." hours ".$time[1]." minutes ".$time[2]." seconds");
  $date=strftime("%Y-%m-%d %H:%M:%S", $date);
  if (!$a) $query="insert into w_queue(town, dueTime, type, quantity) values('".$id."', '".$date."', '".$type."', '".$q."')";
  else $query="update w_queue set dueTime='".$date."', quantity=quantity+".$q." where town=".$id." and type=".$type;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="update towns set resources='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function train($a, $id, $type, $q, $time, $res, $weaps)
@@ -1716,17 +1716,17 @@ function train($a, $id, $type, $q, $time, $res, $weaps)
  
  if (!$a) $query="select max(dueTime) from u_queue where town=".$id;
  else $query="select dueTime from u_queue where town=".$id." and type=".$type;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if ($row[0]!="") $date=strtotime("+".$time[0]." hours ".$time[1]." minutes ".$time[2]." seconds", strtotime($row[0])); else $date=strtotime("+".$time[0]." hours ".$time[1]." minutes ".$time[2]." seconds");
  $date=strftime("%Y-%m-%d %H:%M:%S", $date);
  if (!$a) $query="insert into u_queue(town, dueTime, type, quantity) values('".$id."', '".$date."', '".$type."', '".$q."')";
  else $query="update u_queue set dueTime='".$date."', quantity=quantity+".$q." where town=".$id." and type=".$type;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="update towns set resources='".$res."', weapons='".$weaps."', upkeep=".(array_sum($town[7])+$q)." where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function set_gen($id, $utype)
@@ -1735,9 +1735,9 @@ function set_gen($id, $utype)
 $town=town($id);
 
  $query="update towns set general='1-1-".$utype."-0' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) msg("Unit promoted to general. You can only have one general. Promoting another unit will demote the current general.");
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function battle($data)
@@ -1897,16 +1897,16 @@ $loc=town_xy($id);
 if ($sType) $scol="weapons"; else $scol="resources";
 
  $query="select count(*) from t_queue where seller=".$id." and sType=".$sType." and sSubType=".$sSubType." and bType=".$bType." and bSubType=".$bSubType;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if (!$row[0])
  {
   $query="insert into t_queue(seller, buyer, sType, sSubType, sQ, bType, bSubType, bQ, type, dueTime, x, y, water, maxTime) values(".$id.", ".$buyer.", ".$sType.", ".$sSubType.", ".$sQ.", ".$bType.", ".$bSubType.", ".$bQ.", ".$type.", '".$dueTime."', ".$loc[0].", ".$loc[1].", ".$town[16].", ".$maxTime.")";
-  mysql_query($query, $db_id);
+  mysqli_query($db_id, $query);
   $query="update towns set ".$scol."='".$res."' where id=".$id;
-  $result=mysql_query($query, $db_id);
+  $result=mysqli_query($db_id, $query);
   if ($result) header("Location: marketplace.php?town=".$id);
-  else msg("Failed.".mysql_error());
+  else msg("Failed.".mysqli_error($db_id));
  } else { msg("You already have an offer/transport of same type underway.");}
 }
 
@@ -1915,7 +1915,7 @@ function npc_trade($id, $res)
  global $db_id;
 
  $query="update towns set resources='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1; else return 0;
 }
 
@@ -1925,16 +1925,16 @@ function upgrade_u($id, $res, $unit, $tree, $time)
 
  $time=explode(":", $time);
  $query="select max(dueTime) from uup_queue where town=".$id;
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if ($row[0]!="") $date=strtotime("+ ".$time[0]." hours ".$time[1]." minutes", strtotime($row[0]));
  else $date=strtotime("+ ".$time[0]." hours ".$time[1]." minutes");
  $date=strftime("%Y-%m-%d %H:%M:%S", $date);
  $query="insert into uup_queue(town, unit, tree, dueTime) values(".$id.", ".$unit.", ".$tree.", '".$date."')";
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="update towns set resources='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
- if (!$result) msg("Failed.".mysql_error());
+ $result=mysqli_query($db_id, $query);
+ if (!$result) msg("Failed.".mysqli_error($db_id));
 }
 
 function dispatch($town, $target, $type, $dueTime, $time, $qarmy, $army, $gen)
@@ -1942,15 +1942,15 @@ function dispatch($town, $target, $type, $dueTime, $time, $qarmy, $army, $gen)
  global $db_id;
 
  $query="select max(id), count(*) from a_queue where town=".$town[0];
- $result=mysql_query($query, $db_id);
- $id=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $id=mysqli_fetch_row($result);
  if ($id[1]) $id=$id[0]+1; else $id=1;
  $query="insert into a_queue(town, target, id, type, phase, dueTime, army, general, uup, wup, aup, sent) values(".$town[0].", ".$target[0].", ".$id.", ".$type.", 0, '".$dueTime."', '".$qarmy."', '".$gen."', '".$town[17]."', '".$town[18]."', '".$town[19]."', '".$time."')";
- mysql_query($query, $db_id); $army=explode("-", $army);
+ mysqli_query($db_id, $query); $army=explode("-", $army);
  $ogen=explode("-", $town[15]); $gen=explode("-", $gen); if (($gen[0])&&($type)) $ogen[0]=0; $ogen=implode("-", $ogen);
  $query="update towns set army='".implode("-", $army)."', general='".$ogen."', upkeep=".array_sum($army)." where id=".$town[0];
- $result=mysql_query($query, $db_id);
- if (!$result) msg("Failed.".mysql_error());
+ $result=mysqli_query($db_id, $query);
+ if (!$result) msg("Failed.".mysqli_error($db_id));
 }
 
 function pass($id, $pass)
@@ -1958,9 +1958,9 @@ function pass($id, $pass)
  global $db_id;
 
  $query="update users set pass='".$pass."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) msg("Succes. Password changed.");
- else msg("Failure.".mysql_error());
+ else msg("Failure.".mysqli_error($db_id));
 }
 
 function ban($name, $value)
@@ -1968,11 +1968,11 @@ function ban($name, $value)
  global $db_id;
 
  $query="update users set level='".$value."' where name='".$name."'";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result)
   if ($value) msg("Succes. User '".$name."' level changed.");
   else msg("Succes. User '".$name."' level changed.");
- else msg("Failure.".mysql_error());
+ else msg("Failure.".mysqli_error($db_id));
 }
 
 function ch_capital($name, $usr_id)
@@ -1984,13 +1984,13 @@ function ch_capital($name, $usr_id)
   if($town[0]) 
   {
    $query="select id from towns where isCapital=1 and owner=".$usr[0];
-   $result=mysql_query($query, $db_id); $row=mysql_fetch_row($result);
+   $result=mysqli_query($db_id, $query); $row=mysqli_fetch_row($result);
    $query="update towns set isCapital=0 where id=".$row[0];
-   mysql_query($query, $db_id);
+   mysqli_query($db_id, $query);
    $query="update towns set isCapital=1 where id=".$town[0];
-   $result=mysql_query($query, $db_id);
+   $result=mysqli_query($db_id, $query);
    if ($result) msg("Succes. The town '".$town[2]."' is now your capital.");
-   else msg("Failed.".mysql_error());
+   else msg("Failed.".mysqli_error($db_id));
   }
 		else msg("Did not succeed.");
  else msg("You are not the owner of this town.");
@@ -2001,7 +2001,7 @@ function ch_lang($id, $lang)
  global $db_id;
 
  $query="update users set lang='".$lang."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -2011,9 +2011,9 @@ function profile($id, $email, $desc, $sitter, $grpath, $lang)
  global $db_id;
 
  $query="update users set email='".$email."', description='".$desc."', sitter='".$sitter."', grPath='".$grpath."', lang='".$lang."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) msg("Succes. Profile changed.");
- else msg("Failure.".mysql_error());
+ else msg("Failure.".mysqli_error($db_id));
 }
 
 function reg($name, $pass, $email, $faction)
@@ -2021,9 +2021,9 @@ function reg($name, $pass, $email, $faction)
  global $db_id;
 
  $query="insert into users(name, pass, email, level, joined, lastVisit, points, ip, grPath, faction) values('".$name."', '".$pass."', '".$email."', 1, now(), now(), 0, '".$_SERVER["REMOTE_ADDR"]."', 'default/', ".$faction.")";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) msg("Succes. You are now registered as '".$name."'. You can now login and create your town.");
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function a_create($name, $founder)
@@ -2031,20 +2031,20 @@ function a_create($name, $founder)
  global $db_id;
 
  $query="select count(*) from alliances where name='".$name."'";
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if ($row[0]) { msg("Name taken.");}
  else
  {
   $query="insert into alliances(name, founder) values('".$name."', ".$founder.")";
-  $result=mysql_query($query, $db_id);
+  $result=mysqli_query($db_id, $query);
   $query="select LAST_INSERT_ID()";
-  $result=mysql_query($query, $db_id);
-  $row=mysql_fetch_row($result);
+  $result=mysqli_query($db_id, $query);
+  $row=mysqli_fetch_row($result);
   $query="update users set alliance=".$row[0].", rank='founder' where id=".$founder;
-  $result=mysql_query($query, $db_id);
+  $result=mysqli_query($db_id, $query);
   if ($result) return $row[0];
-  else msg("Failed.".mysql_error());
+  else msg("Failed.".mysqli_error($db_id));
  }
 }
 
@@ -2053,14 +2053,14 @@ function a_join($a_id, $usr_id)
  global $db_id;
 
  $query="select count(*) from reports where recipient=".$usr_id." and subject='Invitation/".$a_id."'";
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if ($row[0])
  {
   $query="delete from reports where recipient=".$usr_id." and subject='Invitation/".$a_id."'";
-  mysql_query($query, $db_id);
+  mysqli_query($db_id, $query);
   $query="update users set alliance=".$a_id.", rank='member' where id=".$usr_id;
-  $result=mysql_query($query, $db_id);
+  $result=mysqli_query($db_id, $query);
   if ($result) return 1;
  }
  else { return 0;}
@@ -2071,7 +2071,7 @@ function a_quit($id)
  global $db_id;
 
  $query="update users set alliance=0 where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -2081,9 +2081,9 @@ function a_del($id)
  global $db_id;
 
  $query="delete from alliances where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="delete from pacts where a1=".$id." or a2=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -2103,9 +2103,9 @@ if (!$type)
 else
 {
  $query="delete from pacts where type=0 and ((a1=".$a1[0]." and a2=".$a2[0].") or ((a1=".$a2[0]." and a2=".$a1[0].")))";
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="insert into pacts(type, a1, a2) values(1, ".$a1[0].", ".$a2[0].")";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -2119,15 +2119,15 @@ $a1=alliance($a1);
 $a2=alliance($a2);
 
  $query="select count(*) from reports where recipient=".$a2[2]." and subject='Peace pact/".$a1[0]."-".$a2[0]."'";
- $result=mysql_query($query, $db_id);
- $row=mysql_fetch_row($result);
+ $result=mysqli_query($db_id, $query);
+ $row=mysqli_fetch_row($result);
  if (!$row[0]) { return 0;}
  $query="delete from pacts where type=1 and ((a1=".$a2[0]." and a2=".$a1[0].") or ((a1=".$a1[0]." and a2=".$a2[0].")))";
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="delete from reports where recipient=".$a2[2]." and subject='Peace pact/".$a1[0]."-".$a2[0]."'";
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
  $query="insert into pacts(type, a1, a2) values(0, ".$a1[0].", ".$a2[0].")";
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -2137,7 +2137,7 @@ function dis_peace($a1, $a2)
  global $db_id;
 
  $query="delete from pacts where a1=".$a1." and a2=".$a2;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) return 1;
  else return 0;
 }
@@ -2148,11 +2148,11 @@ function o_accept($id, $seller, $sType, $sSubType, $bType, $bSubType, $res, $due
 
  if ($bType) $bcol="weapons"; else $bcol="resources";
  $query="update t_queue set type=1, buyer=".$id.", dueTime='".$dueTime."' where seller=".$seller." and sType=".$sType." and sSubType=".$sSubType." and bType=".$bType." and bSubType=".$bSubType;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  $query="update towns set ".$bcol."='".$res."' where id=".$id;
- $result=mysql_query($query, $db_id);
+ $result=mysqli_query($db_id, $query);
  if ($result) header("Location: marketplace.php?town=".$id);
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 
 function create($owner, $name, $x, $y, $is_cap)
@@ -2197,7 +2197,7 @@ function create($owner, $name, $x, $y, $is_cap)
   mysqli_query($db_id, $query);
  }
  if ($result) msg("Succes. You town has been created. Read the beginner's guide found in the help section.");
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
  }
 }
 
@@ -2224,7 +2224,7 @@ function install($name, $pass, $email, $faction)
  }
  fclose($handle);
  if ($ok) msg(" Succes. Map data added.");
- else msg("Failed.".mysql_error());
+ else msg("Failed.".mysqli_error($db_id));
 }
 //chat functions
 function send_chat($se, $sid, $msg, $re)
@@ -2240,7 +2240,7 @@ function mute($id, $v)
  global $db_id;
 
  $query="update users set mute=".$v." where id=".$id;
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
 }
 
 function get_chat($id, $sid, $lcheck, $span)
@@ -2276,7 +2276,7 @@ function update_room($a, $ri, $rn)
   case 3: $query="delete from chat_s where id=".$ri; break;
   default: ;
  }
- mysql_query($query, $db_id);
+ mysqli_query($db_id, $query);
 }
 //end of chat functions
 ?>

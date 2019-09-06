@@ -8,7 +8,7 @@ if (isset($_SESSION["user"][0], $_GET["lang"]))
   $_SESSION["user"][16]=$_GET["lang"];
   msg("Language changed.");
  }
- else msg("Failure.".mysql_error());
+ else msg("Failure.".mysqli_error($db_id));
 }
 else if (isset($_SESSION["lang"], $_GET["lang"]))
 {

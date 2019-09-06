@@ -8,7 +8,7 @@ if (isset($_POST["name"], $_POST["q"]))
    $names=$_POST["name"]; $names=explode(":", $names); $names="\"".implode("\", \"", $names)."\"";
    if ($_POST["name"]!="")
     if (g_points($names, $_POST["q"])) msg($_POST["q"]." points sent to ".$_POST["name"]);
-    else msg("Failure.".mysql_error());
+    else msg("Failure.".mysqli_error($db_id));
    else msg($lang['emptyUserList']);
   }
   else msg($lang['notAdmin']);

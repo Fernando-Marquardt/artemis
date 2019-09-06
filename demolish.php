@@ -34,7 +34,7 @@ if (isset($_SESSION["user"][0], $_GET["town"], $_POST["a"], $_POST["b"]))
  if ((($_POST["a"]==4)&&($_POST["b"]!=7))||($_POST["a"]<4))
  {
   $query="update towns set population=".$town[3].", ".$col."='".$data."', limits='".implode("-", $lim)."' where id=".$town[0];
-  mysql_query($query, $db_id); header("Location: hall.php?town=".$town[0]);
+  mysqli_query($db_id, $query); header("Location: hall.php?town=".$town[0]);
  }
  else msg($lang['accessDenied']);
 }

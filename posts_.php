@@ -10,7 +10,7 @@ if (isset($_SESSION["user"][1], $_POST["a"], $_POST["id"], $_POST["desc"], $_POS
   if ($ok)
   {
    if (post($_POST["a"], $_POST["id"], $_GET["thread"], $_SESSION["user"][0], $_POST["desc"], $_POST["content"])) echo $lang['opCompleted'];
-   else echo "Failed.".mysql_error();
+   else echo "Failed.".mysqli_error($db_id);
   }
   else echo $lang['accessDenied'];
  else echo $lang['notMember'];
