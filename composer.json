@@ -1,0 +1,24 @@
+{
+  "name": "fernando/artemis",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Fernando Marquardt",
+      "email": "fernando.marquardt@gmail.com"
+    }
+  ],
+  "require": {
+    "slim/slim": "^4.2",
+    "slim/psr7": "^0.5.0",
+    "twig/twig": "^2.11",
+    "php": "~7.1",
+    "php-di/slim-bridge": "^3.0",
+    "slim/twig-view": "3.0.0-beta"
+  },
+  "autoload": {
+    "psr-4": {
+      "Artemis\\Engine\\": "engine/",
+      "Artemis\\Core\\": "core/"
+    }
+  }
+}

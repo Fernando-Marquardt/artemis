@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ images_url }}default.css" />
+
+    <title>{{ page_name }} - {{ lang['home'] }}</title>
+</head>
+<body class="q_body">
+
+<div>
+    <table class="q_table">
+        <tr>
+            <td class="td_logo">{{ logo() }}</td>
+        </tr>
+        <tr>
+            <td class="td_top_menu">{{ menu_up() }}</td>
+        </tr>
+        <tr>
+            <td class="td_content">
+                <span class="q_text">{{ announcement }}</span>
+
+                <br />
+                <br />
+
+                {{ lang['weHave'] }} {{ gen_stats[0][0] }} {{ lang['users'] }}
+                <br />
+                {{ gen_stats[1][0] }} {{ lang['activeUsers'] }}
+
+                <br />
+                <br />
+
+                Choose language:
+                <br />
+                <a class="q_link" href="ch_lang.php?lang=en.php"><img src="default/flag_en.gif"></a> | <a class="q_link" href="ch_lang.php?lang=ro.php"><img src="default/flag_ro.gif"></a> | <a class="q_link" href="ch_lang.php?lang=de.php"><img src="default/flag_de.gif"></a> | <a class="q_link" href="ch_lang.php?lang=it.php"><img src="default/flag_it.gif"></a> | <a class="q_link" href="ch_lang.php?lang=nl.php"><img src="default/flag_nl.gif"></a> | <a class="q_link" href="ch_lang.php?lang=fr.php"><img src="default/flag_fr.gif"></a>
+            </td>
+        </tr>
+        <tr>
+            <td class="td_bottom_menu">{{ menu_down() }}</td>
+        </tr>
+    </table>
+
+    <p>{{ about() }}</p>
+</div>
+
+</body>
+</html>

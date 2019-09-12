@@ -13,7 +13,7 @@ font.q_label {
  text-align: center;
 }
 
-font.q_text {
+.q_text {
  color: black;
  font-family: Arial;
  font-size: 16px;
@@ -43,7 +43,7 @@ table.q_table {
  border-width: 0;
  margin-left: auto;
  margin-right: auto;
- width: 600;
+ width: 600px;
 }
 
 table.q_table_desc {
@@ -59,8 +59,8 @@ table.q_table_desc {
 }
 
 td.td_logo{
- height: 90;
- border-bottom-width: 1;
+ height: 90px;
+ border-bottom-width: 1px;
  border-bottom-style: solid;
  border-bottom-color: white;
  text-indent: 0px;
@@ -68,22 +68,22 @@ td.td_logo{
 
 td.td_top_menu {
  background-color: #585858;
- height: 40;
- border-bottom-width: 1;
+ height: 40px;
+ border-bottom-width: 1px;
  border-bottom-style: solid;
  border-bottom-color: white;
 }
 
 td.td_content {
- height: 366;
+ height: 366px;
  text-align: center;
 }
 
 td.td_bottom_menu {
  background-color: #585858;
- height: 40;
+ height: 40px;
  text-align: right;
- border-top-width: 1;
+ border-top-width: 1px;
  border-top-style: solid;
  border-top-color: white;
 }
