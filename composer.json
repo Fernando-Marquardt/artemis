@@ -7,6 +7,12 @@
       "email": "fernando.marquardt@gmail.com"
     }
   ],
+  "scripts": {
+    "server": [
+      "Artemis\\Scripts\\Environment::setEnvironment",
+      "php -S localhost:8000"
+    ]
+  },
   "require": {
     "slim/slim": "^4.2",
     "slim/psr7": "^0.5.0",
@@ -15,10 +21,18 @@
     "php-di/slim-bridge": "^3.0",
     "slim/twig-view": "3.0.0-beta"
   },
+  "require-dev": {
+    "vlucas/phpdotenv": "^3.6"
+  },
   "autoload": {
     "psr-4": {
       "Artemis\\Engine\\": "engine/",
       "Artemis\\Core\\": "core/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Artemis\\Scripts\\": "scripts/"
     }
   }
 }
