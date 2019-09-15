@@ -1,19 +1,19 @@
 <?php
 namespace Artemis\Core\Controllers;
 
-use Artemis\Engine\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Views\Twig;
+use Artemis\Core\Services\GameService;
 
-class HomeController extends Controller {
+class HomeController {
 
-    public function index(ResponseInterface $response, Twig $view): ResponseInterface {
+    public function index(ResponseInterface $response, Twig $view, GameService $gameService): ResponseInterface {
         if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en.php';
         }
 
         return $view->render($response, 'home.html', [
-            'gen_stats' => gen_stats(48)
+            'stats' => $gameService->getStatistics()
         ]);
     }
 }

@@ -1,8 +1,17 @@
 <?php
 use Slim\Views\Twig;
 use Twig\TwigFunction;
+use Artemis\Engine\Database;
 
 return [
+    'database.host' => DI\env('DATABASE_HOST'),
+    'database.user' => DI\env('DATABASE_USER'),
+    'database.pass' => DI\env('DATABASE_PASS'),
+    'database.name' => DI\env('DATABASE_NAME'),
+    Database::class => DI\create()
+        ->constructor(DI\get('database.host'), DI\get('database.user'), DI\get('database.pass'), DI\get('database.name'))
+        ->method('connect'),
+    
     Twig::class => function() {
         global $imgs, $fimgs, $title, $lang, $announcement; // Needed for now
 
