@@ -5,20 +5,24 @@ use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Translator;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use function DI\create;
+use function DI\env;
+use function DI\factory;
+use function DI\get;
 
 return [
-    'database.host' => DI\env('DATABASE_HOST'),
-    'database.user' => DI\env('DATABASE_USER'),
-    'database.pass' => DI\env('DATABASE_PASS'),
-    'database.name' => DI\env('DATABASE_NAME'),
+    'database.host' => env('DATABASE_HOST'),
+    'database.user' => env('DATABASE_USER'),
+    'database.pass' => env('DATABASE_PASS'),
+    'database.name' => env('DATABASE_NAME'),
 
     'locale.default' => 'en_US',
 
-    Database::class => DI\create()
-        ->constructor(DI\get('database.host'), DI\get('database.user'), DI\get('database.pass'), DI\get('database.name'))
+    Database::class => create()
+        ->constructor(get('database.host'), get('database.user'), get('database.pass'), get('database.name'))
         ->method('connect'),
 
-    Translator::class => DI\factory(function($defaultLocale) {
+    Translator::class => factory(function ($defaultLocale) {
         // TODO We need load the user locale when logged in.
         $translator = new Translator($defaultLocale);
         $translator->setFallbackLocales([ $defaultLocale ]);
@@ -29,9 +33,9 @@ return [
 
         return $translator;
     })
-        ->parameter('defaultLocale', DI\get('locale.default')),
+        ->parameter('defaultLocale', get('locale.default')),
     
-    Twig::class => function(Translator $translator) {
+    Twig::class => function (Translator $translator) {
         global $imgs, $fimgs, $announcement; // Needed for now
 
         $view = new Twig(__DIR__ . '/../templates');
@@ -42,19 +46,19 @@ return [
         $environment->addGlobal('images_url', "/$imgs$fimgs");
         $environment->addGlobal('announcement', $announcement);
 
-        $environment->addFunction(new TwigFunction('logo', function() {
+        $environment->addFunction(new TwigFunction('logo', function () {
             logo(null);
         }));
 
-        $environment->addFunction(new TwigFunction('menu_up', function() {
+        $environment->addFunction(new TwigFunction('menu_up', function () {
             menu_up();
         }));
 
-        $environment->addFunction(new TwigFunction('menu_down', function() {
+        $environment->addFunction(new TwigFunction('menu_down', function () {
             menu_down();
         }));
 
-        $environment->addFunction(new TwigFunction('about', function() {
+        $environment->addFunction(new TwigFunction('about', function () {
             about();
         }));
 

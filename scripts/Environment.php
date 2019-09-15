@@ -3,9 +3,10 @@ namespace Artemis\Scripts;
 
 use Dotenv\Dotenv;
 
-class Environment {
-
-    public static function setEnvironment(): void {
+class Environment
+{
+    public static function setEnvironment(): void
+    {
         $dotenv = Dotenv::create(__DIR__ . '/../');
         $dotenv->load();
 
