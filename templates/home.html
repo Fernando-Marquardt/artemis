@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="{{ images_url }}default.css" />
 
-    <title>{{ page_name }} - {{ lang['home'] }}</title>
+    <title>{{ 'game.title'|trans }} - {{ 'home.title'|trans }}</title>
 </head>
 <body class="q_body">
 
@@ -22,14 +22,14 @@
                 <br />
                 <br />
 
-                {{ lang['weHave'] }} {{ stats['total_users'] }} {{ lang['users'] }}
+                {{ 'home.total_users'|trans({'count': stats['total_users']}) }}
                 <br />
-                {{ stats['last_users'] }} {{ lang['activeUsers'] }}
+                {{ 'home.past_hours'|trans({'count': stats['last_users']}) }}
 
                 <br />
                 <br />
 
-                Choose language:
+                {{ 'home.choose_language'|trans }}
                 <br />
                 <a class="q_link" href="ch_lang.php?lang=en.php"><img src="default/flag_en.gif"></a> | <a class="q_link" href="ch_lang.php?lang=ro.php"><img src="default/flag_ro.gif"></a> | <a class="q_link" href="ch_lang.php?lang=de.php"><img src="default/flag_de.gif"></a> | <a class="q_link" href="ch_lang.php?lang=it.php"><img src="default/flag_it.gif"></a> | <a class="q_link" href="ch_lang.php?lang=nl.php"><img src="default/flag_nl.gif"></a> | <a class="q_link" href="ch_lang.php?lang=fr.php"><img src="default/flag_fr.gif"></a>
             </td>

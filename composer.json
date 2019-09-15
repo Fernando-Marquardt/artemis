@@ -1,5 +1,6 @@
 {
   "name": "fernando/artemis",
+  "description": "An open source browser stragy game.",
   "type": "project",
   "authors": [
     {
@@ -14,12 +15,14 @@
     ]
   },
   "require": {
+    "php": "~7.1",
+    "ext-intl": "*",
     "slim/slim": "^4.2",
     "slim/psr7": "^0.5.0",
     "twig/twig": "^2.11",
-    "php": "~7.1",
     "php-di/slim-bridge": "^3.0",
-    "slim/twig-view": "3.0.0-beta"
+    "slim/twig-view": "3.0.0-beta",
+    "symfony/translation": "^4.3"
   },
   "require-dev": {
     "vlucas/phpdotenv": "^3.6"
