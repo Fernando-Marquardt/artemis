@@ -1,0 +1,63 @@
+@import url('normalize.css');
+
+body {
+    background: #1b1b1c;
+    color: #6a6a73;
+    font-family: 'Open Sans', sans-serif;
+}
+
+a,
+a:visited {
+    color: #8cc503;
+}
+
+a:active,
+a:focus,
+a:hover {
+    color: #fff;
+    transition: color .3s;
+}
+
+.container {
+    margin: 0 auto;
+    width: 960px;
+}
+
+.logo {
+    background: #2b2b2d;
+    color: #c7e603;
+    font-family: 'Kaushan Script', cursive;
+    font-size: 60px;
+    padding: 26px;
+}
+
+.menu {
+    background: #80b404;
+    border-top: 1px solid #c7e603;
+    display: flex;
+    margin-bottom: 26px;
+}
+
+.menu a {
+    color: #fff;
+    display: block;
+    font-weight: bold;
+    padding: 12px;
+    text-decoration: none;
+    transition: background .3s, color .3s;
+}
+
+.menu a:hover {
+    background: #eee;
+    color: #2d2d2f;
+}
+
+.content {
+    margin-bottom: 26px;
+}
+
+.submenu {
+    background: #1e1e1f;
+    border: 1px solid #404042;
+    margin-bottom: 26px;
+}

@@ -1,10 +1,16 @@
 <?php
 use Artemis\Engine\Database;
+use Artemis\Engine\Filters\RouteFilter;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Slim\Factory\AppFactory;
+use Slim\Interfaces\RouteCollectorInterface;
+use Slim\Routing\RouteCollector;
 use Slim\Views\Twig;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Translator;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use function DI\autowire;
 use function DI\create;
 use function DI\env;
 use function DI\factory;
@@ -35,33 +41,18 @@ return [
     })
         ->parameter('defaultLocale', get('locale.default')),
     
-    Twig::class => function (Translator $translator) {
-        global $imgs, $fimgs, $announcement; // Needed for now
-
+    Twig::class => function (Translator $translator, RouteFilter $routeFilter) {
         $view = new Twig(__DIR__ . '/../templates');
         $environment = $view->getEnvironment();
 
         $environment->addFilter(new TwigFilter('trans', [$translator, 'trans']));
-
-        $environment->addGlobal('images_url', "/$imgs$fimgs");
-        $environment->addGlobal('announcement', $announcement);
-
-        $environment->addFunction(new TwigFunction('logo', function () {
-            logo(null);
-        }));
-
-        $environment->addFunction(new TwigFunction('menu_up', function () {
-            menu_up();
-        }));
-
-        $environment->addFunction(new TwigFunction('menu_down', function () {
-            menu_down();
-        }));
-
-        $environment->addFunction(new TwigFunction('about', function () {
-            about();
-        }));
+        $environment->addFilter(new TwigFilter('url', [$routeFilter, 'url']));
 
         return $view;
-    }
+    },
+
+    // These are needed so we can access the RouteParser to use on Twig filters.
+    // The new RouteContext is useless for us at this point, as it requires the request to work.
+    ResponseFactoryInterface::class => factory([AppFactory::class, 'determineResponseFactory']),
+    RouteCollectorInterface::class => autowire(RouteCollector::class)
 ];

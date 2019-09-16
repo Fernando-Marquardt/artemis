@@ -1,45 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="{{ images_url }}default.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Kaushan+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="templates/style/main.css" />
 
     <title>{{ 'game.title'|trans }} - {{ 'home.title'|trans }}</title>
 </head>
-<body class="q_body">
+<body>
 
-<div>
-    <table class="q_table">
-        <tr>
-            <td class="td_logo">{{ logo() }}</td>
-        </tr>
-        <tr>
-            <td class="td_top_menu">{{ menu_up() }}</td>
-        </tr>
-        <tr>
-            <td class="td_content">
-                <span class="q_text">{{ announcement }}</span>
+<div class="container">
+    <div class="logo">{{ 'game.title'|trans }}</div>
+    <div class="menu">
+        <a href="{{ 'home'|url }}">{{ 'menu.home'|trans }}</a>
+    </div>
 
-                <br />
-                <br />
+    <div class="content">
+        {{ 'home.welcome'|trans }}
 
-                {{ 'home.total_users'|trans({'count': stats['total_users']}) }}
-                <br />
-                {{ 'home.past_hours'|trans({'count': stats['last_users']}) }}
+        <br />
+        <br />
 
-                <br />
-                <br />
+        {{ 'home.total_users'|trans({'count': stats['total_users']}) }}
+        <br />
+        {{ 'home.past_hours'|trans({'count': stats['last_users']}) }}
 
-                {{ 'home.choose_language'|trans }}
-                <br />
-                <a class="q_link" href="ch_lang.php?lang=en.php"><img src="default/flag_en.gif"></a> | <a class="q_link" href="ch_lang.php?lang=ro.php"><img src="default/flag_ro.gif"></a> | <a class="q_link" href="ch_lang.php?lang=de.php"><img src="default/flag_de.gif"></a> | <a class="q_link" href="ch_lang.php?lang=it.php"><img src="default/flag_it.gif"></a> | <a class="q_link" href="ch_lang.php?lang=nl.php"><img src="default/flag_nl.gif"></a> | <a class="q_link" href="ch_lang.php?lang=fr.php"><img src="default/flag_fr.gif"></a>
-            </td>
-        </tr>
-        <tr>
-            <td class="td_bottom_menu">{{ menu_down() }}</td>
-        </tr>
-    </table>
+        <br />
+        <br />
 
-    <p>{{ about() }}</p>
+        {{ 'home.choose_language'|trans }}
+        <br />
+        <a class="q_link" href="ch_lang.php?lang=en.php"><img src="default/flag_en.gif"></a> | <a class="q_link" href="ch_lang.php?lang=ro.php"><img src="default/flag_ro.gif"></a> | <a class="q_link" href="ch_lang.php?lang=de.php"><img src="default/flag_de.gif"></a> | <a class="q_link" href="ch_lang.php?lang=it.php"><img src="default/flag_it.gif"></a> | <a class="q_link" href="ch_lang.php?lang=nl.php"><img src="default/flag_nl.gif"></a> | <a class="q_link" href="ch_lang.php?lang=fr.php"><img src="default/flag_fr.gif"></a>
+    </div>
+
+    <div class="submenu"></div>
+
+    Devana created by Busuioc Andrei. Online at <a href="http://devana.eu">devana.eu</a>
 </div>
 
 </body>
